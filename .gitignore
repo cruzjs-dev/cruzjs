@@ -74,3 +74,5 @@ data/
 # Local secrets — never commit
 .env
 .dev.vars
+
+.npmrc

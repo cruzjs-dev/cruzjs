@@ -12,7 +12,7 @@ import { authIdentity, organizations } from '@cruzjs/core/database/schema';
 import { DrizzleUniversalFactory, fkRef } from '@cruzjs/drizzle-universal';
 import type { UniversalBuilder, TableRef } from '@cruzjs/drizzle-universal';
 import { createBillingSchema } from '../billing/billing.schema';
-import { createImpersonationSchema } from '../admin/admin.impersonation';
+import { createImpersonationSchema } from '../admin/admin.impersonation.schema';
 import { createRichTextSchema } from '../rich-text/rich-text.schema';
 
 // Re-export core org tables and types for backwards compatibility
@@ -29,8 +29,8 @@ export type { OrgRole, OrgRoleLower, Organization, NewOrganization } from '@cruz
 export * from '../billing/billing.schema';
 
 // Re-export admin impersonation tables
-export { impersonationTokens } from '../admin/admin.impersonation';
-export type { ImpersonationToken, NewImpersonationToken } from '../admin/admin.impersonation';
+export { impersonationTokens } from '../admin/admin.impersonation.schema';
+export type { ImpersonationToken, NewImpersonationToken } from '../admin/admin.impersonation.schema';
 
 // Re-export rich text tables
 export * from '../rich-text/rich-text.schema';

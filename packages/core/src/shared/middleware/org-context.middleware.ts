@@ -29,6 +29,24 @@ function extractOrgId(request: Request, params?: Record<string, string | undefin
 }
 
 /**
+ * Resolve the user's default org when none is provided via route param / header.
+ * Falls back to the user's first membership so single-org apps (and admin UIs
+ * that just log in) get org context without sending an org id on every request.
+ */
+async function resolveDefaultOrgId(
+  userId: string,
+  container: CruzContainer
+): Promise<string | null> {
+  try {
+    const orgService = container.get<IOrgService>(ORG_SERVICE);
+    const orgs = await orgService.listUserOrgs(userId);
+    return orgs[0]?.id ?? null;
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Organization context middleware
  * Extracts orgId from route params or header, loads user's role, and attaches to request context
  *
@@ -43,7 +61,9 @@ export const requireOrgContext = async (
   auth: AuthenticatedRequest,
   container: CruzContainer
 ): Promise<AuthenticatedOrgRequest> => {
-  const orgId = extractOrgId(request, params);
+  const orgId =
+    extractOrgId(request, params) ??
+    (await resolveDefaultOrgId(auth.user.id, container));
 
   if (!orgId) {
     throw new Response(

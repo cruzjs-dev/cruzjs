@@ -5,21 +5,28 @@
  * single-use tokens that let an admin sign in as another user.
  */
 
-import { createId } from '@paralleldrive/cuid2';
-import { DrizzleUniversalFactory, fkRef } from '@cruzjs/drizzle-universal';
-import type { UniversalBuilder, TableRef } from '@cruzjs/drizzle-universal';
 import { Injectable, Inject } from '@cruzjs/core/di';
 import {
   DRIZZLE,
   type DrizzleDatabase,
 } from '@cruzjs/core/shared/database/drizzle.service';
 import { eq, and, desc } from 'drizzle-orm';
-import { authIdentity } from '@cruzjs/core/database/schema';
+
+// Table + factory live in a decorator-free sibling so the database/schema
+// barrel can import them without dragging this file's decorated service into
+// drizzle-kit's esbuild transform (which can't handle parameter decorators).
+// Re-exported here for back-compat.
+import { impersonationTokens } from './admin.impersonation.schema';
+export {
+  createImpersonationSchema,
+  impersonationTokens,
+} from './admin.impersonation.schema';
+export type {
+  ImpersonationToken,
+  NewImpersonationToken,
+} from './admin.impersonation.schema';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-const generateId = () => createId();
-const nowISO = () => new Date().toISOString();
 
 /** Generate a cryptographically random hex token. */
 function generateToken(): string {
@@ -29,40 +36,6 @@ function generateToken(): string {
     .map((b) => b.toString(16).padStart(2, '0'))
     .join('');
 }
-
-// ─── Dialect-Agnostic Factory ────────────────────────────────────────────────
-
-export const createImpersonationSchema = DrizzleUniversalFactory.create(
-  (b: UniversalBuilder, refs: { authIdentity: TableRef<{ id: string }> }) => {
-  const impersonationTokensTable = b.table(
-    'ImpersonationToken',
-    {
-      id: b.text('id').primaryKey().$defaultFn(generateId),
-      targetUserId: b.text('targetUserId').notNull().references(() => fkRef(refs.authIdentity.id), { onDelete: 'cascade' }),
-      adminUserId: b.text('adminUserId').notNull().references(() => fkRef(refs.authIdentity.id), { onDelete: 'cascade' }),
-      token: b.text('token').notNull().unique(),
-      expiresAt: b.text('expiresAt').notNull(),
-      usedAt: b.text('usedAt'),
-      createdAt: b.timestamp('createdAt').notNull().$defaultFn(nowISO),
-    },
-    (table: any) => ({
-      tokenIdx: b.uniqueIndex('ImpersonationToken_token_idx').on(table.token),
-      adminIdx: b.index('ImpersonationToken_adminUserId_idx').on(table.adminUserId),
-      targetIdx: b.index('ImpersonationToken_targetUserId_idx').on(table.targetUserId),
-    }),
-  );
-
-  return { impersonationTokens: impersonationTokensTable };
-},
-);
-
-// ─── Named convenience exports ──────────────────────────────────────────────
-
-const _s = createImpersonationSchema({ authIdentity });
-export const impersonationTokens = _s.impersonationTokens;
-
-export type ImpersonationToken = typeof impersonationTokens.$inferSelect;
-export type NewImpersonationToken = typeof impersonationTokens.$inferInsert;
 
 // ─── Service ─────────────────────────────────────────────────────────────────
 
