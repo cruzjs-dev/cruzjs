@@ -1,0 +1,52 @@
+{
+  "name": "@cruzjs/saas",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./routing": "./src/routing/index.ts",
+    "./api": "./src/api/index.ts",
+    "./orgs/components": "./src/orgs/components/index.ts",
+    "./orgs/events": "./src/orgs/events/index.ts",
+    "./orgs/pages": "./src/orgs/pages/index.ts",
+    "./trpc/routers": "./src/trpc/routers.ts",
+    "./api/billing-plans": "./src/api/billing-plans.ts",
+    "./api/billing-subscription": "./src/api/billing-subscription.ts",
+    "./api/billing-portal": "./src/api/billing-portal.ts",
+    "./providers/CruzSaasProviders": "./src/providers/CruzSaasProviders.tsx",
+    "./routing/*": "./src/routing/*.ts",
+    "./trpc/*": "./src/trpc/*.ts",
+    "./api/*": "./src/api/*.ts",
+    "./orgs/pages/*": "./src/orgs/pages/*.tsx",
+    "./orgs/components/*": "./src/orgs/components/*.tsx",
+    "./contexts/*": "./src/contexts/*.tsx",
+    "./database/*": "./src/database/*.ts",
+    "./*": "./src/*"
+  },
+  "scripts": {
+    "build": "tsup"
+  },
+  "files": [
+    "dist/",
+    "src/",
+    "README.md"
+  ],
+  "peerDependencies": {
+    "@cruzjs/core": ">=0.0.1",
+    "drizzle-orm": ">=0.36.0",
+    "inversify": ">=7.0.0",
+    "reflect-metadata": ">=0.2.0",
+    "zod": ">=3.0.0",
+    "react": ">=18.0.0",
+    "@trpc/server": ">=11.0.0",
+    "@tanstack/react-query": ">=5.0.0"
+  },
+  "dependencies": {
+    "@paralleldrive/cuid2": "^2.2.2",
+    "stripe": "^19.3.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

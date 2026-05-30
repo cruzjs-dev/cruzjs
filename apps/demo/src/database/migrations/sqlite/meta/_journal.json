@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1773084898518,
+      "tag": "0000_wide_genesis",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1773249597560,
+      "tag": "0001_odd_silver_samurai",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1748188920000,
+      "tag": "0002_add_deletion_requested_at",
+      "breakpoints": true
+    }
+  ]
+}

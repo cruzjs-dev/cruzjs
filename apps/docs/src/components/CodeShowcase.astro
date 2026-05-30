@@ -1,0 +1,236 @@
+---
+const serverCode = `<span class="kw">export const</span> <span class="fn">tasksRouter</span> = <span class="fn">router</span>({
+  <span class="prop">list</span>: <span class="fn">orgProcedure</span>
+    .<span class="fn">query</span>(<span class="kw">async</span> ({ <span class="param">ctx</span> }) =&gt; {
+      <span class="kw">return</span> <span class="param">ctx</span>.db
+        .<span class="fn">select</span>()
+        .<span class="fn">from</span>(<span class="var">tasks</span>)
+        .<span class="fn">where</span>(<span class="fn">eq</span>(<span class="var">tasks</span>.orgId, <span class="param">ctx</span>.org.id));
+    }),
+
+  <span class="prop">create</span>: <span class="fn">orgProcedure</span>
+    .<span class="fn">input</span>(<span class="var">z</span>.<span class="fn">object</span>({ <span class="prop">title</span>: <span class="var">z</span>.<span class="fn">string</span>() }))
+    .<span class="fn">mutation</span>(<span class="kw">async</span> ({ <span class="param">ctx</span>, <span class="param">input</span> }) =&gt; {
+      <span class="kw">return</span> <span class="param">ctx</span>.db.<span class="fn">insert</span>(<span class="var">tasks</span>)
+        .<span class="fn">values</span>({ ...<span class="param">input</span>, <span class="prop">orgId</span>: <span class="param">ctx</span>.org.id });
+    }),
+});`;
+
+const clientCode = `<span class="kw">export default function</span> <span class="fn">Tasks</span>() {
+  <span class="kw">const</span> { <span class="var">data</span>: <span class="var">tasks</span> } = <span class="var">trpc</span>.tasks.list.<span class="fn">useQuery</span>();
+
+  <span class="kw">return</span> (
+    &lt;<span class="comp">Page</span> <span class="prop">title</span>=<span class="str">"Tasks"</span>&gt;
+      &lt;<span class="comp">DataTable</span>
+        <span class="prop">data</span>={<span class="var">tasks</span>}
+        <span class="prop">columns</span>={[
+          { <span class="prop">header</span>: <span class="str">"Title"</span>, <span class="prop">accessorKey</span>: <span class="str">"title"</span> },
+          { <span class="prop">header</span>: <span class="str">"Status"</span>, <span class="prop">accessorKey</span>: <span class="str">"status"</span> },
+          { <span class="prop">header</span>: <span class="str">"Assigned"</span>, <span class="prop">accessorKey</span>: <span class="str">"assignee"</span> },
+        ]}
+      /&gt;
+    &lt;/<span class="comp">Page</span>&gt;
+  );
+}`;
+---
+
+<section class="cruz-code-showcase">
+  <div class="showcase-inner">
+    <div class="section-header">
+      <span class="section-label">See it in action</span>
+      <h2 class="section-title">End-to-End Type Safety</h2>
+      <p class="section-description">
+        Define a tRPC procedure on the server, call it from the client.
+        Full TypeScript inference — no codegen step, no runtime surprises.
+      </p>
+    </div>
+    <div class="code-panels">
+      <div class="code-panel">
+        <div class="panel-header">
+          <div class="panel-dots">
+            <span class="dot red"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+          </div>
+          <span class="panel-label">server/routers/tasks.ts</span>
+          <span class="panel-badge server-badge">Server</span>
+        </div>
+        <pre class="panel-code"><code set:html={serverCode} /></pre>
+      </div>
+      <div class="code-panel">
+        <div class="panel-header">
+          <div class="panel-dots">
+            <span class="dot red"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+          </div>
+          <span class="panel-label">routes/tasks.tsx</span>
+          <span class="panel-badge client-badge">Client</span>
+        </div>
+        <pre class="panel-code"><code set:html={clientCode} /></pre>
+      </div>
+    </div>
+    <p class="code-note">
+      Change the server schema — the client breaks at compile time, not in production.
+    </p>
+  </div>
+</section>
+
+<style>
+  .cruz-code-showcase {
+    padding: 5rem 2rem;
+    background: #f9fafb;
+  }
+
+  .showcase-inner {
+    max-width: 68rem;
+    margin: 0 auto;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .section-label {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #7c3aed;
+    margin-bottom: 0.75rem;
+  }
+
+  .section-title {
+    font-size: 2.5rem !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.03em !important;
+    color: #111827 !important;
+    margin-bottom: 1rem !important;
+    border: none !important;
+    padding: 0 !important;
+  }
+
+  .section-description {
+    font-size: 1.15rem;
+    color: #6b7280 !important;
+    max-width: 36rem;
+    margin: 0 auto !important;
+    line-height: 1.7;
+  }
+
+  .code-panels {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  .code-panel {
+    border-radius: 1rem;
+    overflow: hidden;
+    background: #1e1b2e;
+    border: 1px solid rgba(124, 58, 237, 0.2);
+    box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.15);
+  }
+
+  .panel-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .panel-dots {
+    display: flex;
+    gap: 5px;
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .dot.red { background: #f87171; }
+  .dot.yellow { background: #fbbf24; }
+  .dot.green { background: #34d399; }
+
+  .panel-label {
+    flex: 1;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  .panel-badge {
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.2em 0.6em;
+    border-radius: 9999px;
+  }
+
+  .server-badge {
+    background: rgba(124, 58, 237, 0.2);
+    color: #c4b5fd;
+  }
+
+  .client-badge {
+    background: rgba(37, 99, 235, 0.2);
+    color: #93c5fd;
+  }
+
+  .panel-code {
+    padding: 1.25rem 1.5rem !important;
+    margin: 0 !important;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace !important;
+    font-size: 0.8rem !important;
+    line-height: 1.75 !important;
+    color: #e8e0f0 !important;
+    background: transparent !important;
+    overflow-x: auto;
+    border: none !important;
+    border-radius: 0 !important;
+  }
+
+  .panel-code code {
+    background: transparent !important;
+    padding: 0 !important;
+    font-size: inherit !important;
+    color: inherit !important;
+  }
+
+  .panel-code :global(.kw) { color: #c084fc; }
+  .panel-code :global(.fn) { color: #67e8f9; }
+  .panel-code :global(.prop) { color: #a5b4fc; }
+  .panel-code :global(.var) { color: #e8e0f0; }
+  .panel-code :global(.param) { color: #fdba74; }
+  .panel-code :global(.str) { color: #86efac; }
+  .panel-code :global(.comp) { color: #fbbf24; }
+
+  .code-note {
+    text-align: center;
+    margin-top: 1.5rem !important;
+    font-size: 0.9rem;
+    color: #9ca3af !important;
+    font-style: italic;
+  }
+
+  @media (max-width: 768px) {
+    .code-panels {
+      grid-template-columns: 1fr;
+    }
+
+    .section-title {
+      font-size: 2rem !important;
+    }
+
+    .panel-code {
+      font-size: 0.72rem !important;
+    }
+  }
+</style>

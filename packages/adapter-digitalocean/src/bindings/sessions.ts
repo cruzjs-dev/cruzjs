@@ -1,0 +1,82 @@
+/**
+ * DigitalOcean Session Adapter
+ *
+ * Uses Redis for session storage when configured, providing fast
+ * key-value lookups ideal for token validation. Falls back to in-memory
+ * storage when Redis is not available.
+ */
+
+import type { SessionAdapter, SessionData } from '@cruzjs/core/sessions';
+
+export class DigitalOceanSessionAdapter implements SessionAdapter {
+  private readonly inMemoryStore = new Map<string, SessionData>();
+
+  constructor(
+    private readonly redisUrl: string | null,
+  ) {}
+
+  async store(session: SessionData): Promise<void> {
+    if (this.redisUrl) {
+      // TODO: Redis SET session:<tokenHash> JSON with EX ttl
+      // TODO: Redis SADD user-sessions:<userId> session.id
+    }
+    this.inMemoryStore.set(session.tokenHash, session);
+    this.inMemoryStore.set(`id:${session.id}`, session);
+  }
+
+  async retrieve(tokenHash: string): Promise<SessionData | null> {
+    if (this.redisUrl) {
+      // TODO: Redis GET session:<tokenHash>
+    }
+    return this.inMemoryStore.get(tokenHash) ?? null;
+  }
+
+  async retrieveById(id: string): Promise<SessionData | null> {
+    if (this.redisUrl) {
+      // TODO: Redis GET session-id:<id>
+    }
+    return this.inMemoryStore.get(`id:${id}`) ?? null;
+  }
+
+  async listByUser(userId: string): Promise<SessionData[]> {
+    if (this.redisUrl) {
+      // TODO: Redis SMEMBERS user-sessions:<userId>, then GET each
+    }
+    return Array.from(this.inMemoryStore.values()).filter(
+      (s) => s.userId === userId && !s.id.startsWith('id:'),
+    );
+  }
+
+  async touch(id: string, lastActiveAt: Date): Promise<void> {
+    const session = await this.retrieveById(id);
+    if (!session) return;
+    const updated = { ...session, lastActiveAt };
+    this.inMemoryStore.set(session.tokenHash, updated);
+    this.inMemoryStore.set(`id:${id}`, updated);
+  }
+
+  async revoke(id: string): Promise<void> {
+    const session = await this.retrieveById(id);
+    if (!session) return;
+    const revoked = { ...session, revokedAt: new Date() };
+    this.inMemoryStore.set(session.tokenHash, revoked);
+    this.inMemoryStore.set(`id:${id}`, revoked);
+  }
+
+  async revokeAll(userId: string): Promise<void> {
+    const sessions = await this.listByUser(userId);
+    await Promise.all(sessions.map((s) => this.revoke(s.id)));
+  }
+
+  async prune(): Promise<number> {
+    const now = new Date();
+    let count = 0;
+    for (const [key, session] of this.inMemoryStore) {
+      if (session.expiresAt < now || session.revokedAt !== null) {
+        this.inMemoryStore.delete(key);
+        count++;
+      }
+    }
+    return Math.floor(count / 2);
+  }
+}

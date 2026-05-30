@@ -1,0 +1,28 @@
+{
+  "name": "@cruzjs/drizzle-universal",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./builders/sqlite": "./src/builders/sqlite.ts",
+    "./builders/pg": "./src/builders/pg.ts",
+    "./builders/mysql": "./src/builders/mysql.ts",
+    "./*": "./src/*"
+  },
+  "files": [
+    "dist/",
+    "src/",
+    "README.md"
+  ],
+  "peerDependencies": {
+    "drizzle-orm": ">=0.36.0"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.2.0",
+    "better-sqlite3": "^12.6.2",
+    "@types/better-sqlite3": "^7.6.13",
+    "drizzle-orm": "^0.36.4",
+    "typescript": "^5.9.3"
+  }
+}

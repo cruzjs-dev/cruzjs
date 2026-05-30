@@ -1,0 +1,232 @@
+# Framework7 React + Konsta UI + React Router Rules
+
+## Core Frameworks
+- **Framework7 React**: Primary framework for mobile app structure
+- **Konsta UI React**: UI component library built with Tailwind CSS
+- **React Router**: Navigation and routing (integrate with Framework7 router when needed)
+
+## Component Structure
+
+### Framework7 App Structure
+- Always use `App` component as the root wrapper with `theme` prop (`ios` or `md`)
+- Use `View` component for main app views with `main` prop
+- Use `Page` component for individual pages
+- Use `Navbar` component for page headers with `title` prop
+- Use `Toolbar` component for bottom toolbars
+- Use `Link` component for navigation instead of regular anchor tags
+
+### Page Structure Pattern
+```typescript
+import { Page, Navbar, Block } from 'framework7-react';
+import { Appbar, BlockTitle } from 'konsta/react';
+
+const MyPage: React.FC = () => {
+  return (
+    <Page>
+      <Navbar title="Page Title" />
+      <Block>
+        {/* Page content */}
+      </Block>
+    </Page>
+  );
+};
+```
+
+## Konsta UI Components
+
+### Use Konsta Components for UI Elements
+- Use `Appbar` for app bars/navigation bars
+- Use `Block`, `BlockTitle`, `BlockHeader`, `BlockFooter` for content sections
+- Use `Button` for buttons (with `colors` prop for theming)
+- Use `Card` for card components
+- Use `List`, `ListItem`, `ListInput` for lists and forms
+- Use `Preloader` for loading indicators
+- Use `Icon` for icons
+- Use `Badge` for badges/notifications
+- Use `Chip` for chips/tags
+- Use `Link` for links
+- Use `Navbar` for navigation bars
+- Use `Panel` for side panels
+- Use `Popover` for popovers
+- Use `Sheet` for bottom sheets
+- Use `Toast` for toast notifications
+- Use `Dialog` for dialogs/modals
+- Use `ActionSheet` for action sheets
+- Use `Segmented` for segmented controls
+- Use `Toggle` for toggle switches
+- Use `Checkbox` for checkboxes
+- Use `Radio` for radio buttons
+- Use `Range` for sliders
+- Use `Progressbar` for progress bars
+- Use `Searchbar` for search inputs
+- Use `Swiper` for carousels/swipers
+- Use `Tabs` for tab navigation
+- Use `Tabbar` for tab bars
+- Use `Toolbar` for toolbars
+
+### Konsta Component Props
+- Always use `colors` prop for theming (e.g., `colors={{ material: 'blue', ios: 'blue' }}`)
+- Use `ios` and `material` props for platform-specific styling
+- Use `rounded` prop for rounded corners
+- Use `bordered` prop for borders
+- Use `raised` prop for elevation/shadow
+
+## Styling
+
+### Tailwind CSS
+- Use Tailwind CSS utility classes for styling (Konsta UI is built on Tailwind)
+- Use `dark:` prefix for dark mode styles
+- Use responsive prefixes (`sm:`, `md:`, `lg:`, etc.) when needed
+- Prefer Tailwind classes over inline styles
+
+### Framework7 CSS Variables
+- Use Framework7 CSS variables for theming when appropriate
+- Use `--f7-theme-color` for primary theme color
+- Use `--f7-navbar-bg-color` for navbar background
+- Use `--f7-toolbar-bg-color` for toolbar background
+
+## Routing
+
+### Framework7 Router
+- Use Framework7's built-in router for navigation within Framework7 views
+- Use `Link` component with `href` prop for navigation
+- Use `f7router` prop to access router instance when needed
+- Use `f7route` prop to access route data
+
+### React Router Integration
+- When using React Router, integrate it with Framework7's router
+- Use React Router for top-level routing if needed
+- Ensure Framework7 router works within React Router routes
+
+## React Patterns
+
+### Component Definition
+- Always use functional components with React.FC
+- Use arrow function syntax: `const MyComponent: React.FC<Props> = (props) => { return <></>; }`
+- Use `type` instead of `interface` for prop types
+- Never use `any` type unless absolutely necessary
+
+### Component Organization
+- Put public functions at the top, private at the bottom
+- Keep components concise - fewer lines is better
+- Avoid single-line/unwrapped if blocks
+
+### Export Patterns
+- **Routes only**: Use default exports for route files (`app/routes/**/*.tsx`)
+- **Everything else**: Always use named exports (components, utilities, services, controllers, etc.)
+- Examples:
+  - Route: `export default LoginPage;` ✅
+  - Component: `export { LoginForm };` ✅ (NOT `export default LoginForm;` ❌)
+  - Utility: `export { checkAuthClient };` ✅
+  - Service: `export { authService };` ✅
+
+### Hooks
+- Use Framework7 hooks: `useFramework7`, `useTheme`, `useToolbar`, `useNavbar`
+- Use React hooks appropriately (useState, useEffect, etc.)
+- Use Konsta UI hooks when available
+
+## State Management
+
+### Framework7 Store
+- Use Framework7's store for global state when appropriate
+- Use `f7store` to access store instance
+- Use `f7ready` to ensure Framework7 is initialized
+
+### React State
+- Use React hooks for component-local state
+- Use Context API or state management library for shared state
+
+## Platform Detection
+
+### Theme Detection
+- Use `useTheme` hook to detect current theme (`ios` or `md`)
+- Apply platform-specific styles using theme detection
+- Use `ios` and `material` props on Konsta components
+
+### Device Detection
+- Use Framework7's device detection utilities when needed
+- Apply device-specific optimizations
+
+## Best Practices
+
+### Performance
+- Use `React.memo` for expensive components when appropriate
+- Lazy load routes/pages when possible
+- Optimize images and assets
+
+### Accessibility
+- Use semantic HTML elements
+- Provide proper ARIA labels
+- Ensure keyboard navigation works
+
+### Code Quality
+- Keep components small and focused
+- Extract reusable logic into custom hooks
+- Use TypeScript strictly (no `any` unless necessary)
+- Follow consistent naming conventions
+
+## Import Patterns
+
+### TypeScript Path Alias
+- **`@`** points to the project root directory
+- Use `@/` prefix for all imports from project root to avoid deep relative paths
+- Examples:
+  - `@/libs/auth/auth.controller` instead of `../../../../libs/auth/auth.controller`
+  - `@/app/components/layout/AuthLayout` instead of `../../components/layout/AuthLayout`
+  - `@/app/utils/auth` instead of `../../utils/auth`
+- Always prefer `@/` imports over relative paths (`../`, `../../`, etc.) for better maintainability
+
+### Framework7 Imports
+```typescript
+import { App, View, Page, Navbar, Toolbar, Link } from 'framework7-react';
+```
+
+### Konsta UI Imports
+```typescript
+import { Appbar, Block, BlockTitle, Button, Card } from 'konsta/react';
+```
+
+### React Router Imports
+```typescript
+import { BrowserRouter, Routes, Route, Link as RouterLink } from 'react-router-dom';
+```
+
+## Example Component Structure
+
+```typescript
+import { Page, Navbar } from 'framework7-react';
+import { Block, BlockTitle, Button } from 'konsta/react';
+import { useFramework7 } from 'framework7-react';
+
+type MyPageProps = {
+  title?: string;
+};
+
+const MyPage: React.FC<MyPageProps> = ({ title = 'Default Title' }) => {
+  const f7 = useFramework7();
+  
+  const handleClick = () => {
+    f7.dialog.alert('Button clicked!');
+  };
+  
+  return (
+    <Page>
+      <Navbar title={title} />
+      <Block>
+        <BlockTitle>Content</BlockTitle>
+        <Button onClick={handleClick}>Click Me</Button>
+      </Block>
+    </Page>
+  );
+};
+
+export default MyPage;
+```
+
+## Notes
+- Framework7 provides its own router - use it for navigation within Framework7 views
+- Konsta UI components are built on Tailwind CSS - use Tailwind utilities for styling
+- Always test on both iOS and Material Design themes
+- Ensure components work well on mobile devices
+- Use Framework7's built-in components and utilities when available
+

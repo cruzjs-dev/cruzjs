@@ -1,0 +1,219 @@
+@import 'tailwindcss';
+
+/* Scan @cruz/* package sources for Tailwind utility classes */
+@source "../node_modules/@cruzjs/core/src/**/*.{ts,tsx}";
+@source "../node_modules/@cruzjs/start/src/**/*.{ts,tsx}";
+@source "../node_modules/@cruzjs/saas/src/**/*.{ts,tsx}";
+@source "../node_modules/@cruzjs/ui/src/**/*.{ts,tsx}";
+
+@theme {
+  /* Brand — vibrant indigo with full tonal range */
+  --color-primary: #6366f1;
+  --color-primary-light: #818cf8;
+  --color-primary-dark: #4f46e5;
+  --color-primary-lighter: #a5b4fc;
+  --color-primary-subtle: #eef2ff;
+  --color-primary-glow: color-mix(in srgb, #6366f1 30%, transparent);
+
+  /* Semantic — richer, more vibrant */
+  --color-accent: #10b981;
+  --color-accent-subtle: #ecfdf5;
+  --color-info: #3b82f6;
+  --color-info-light: #60a5fa;
+  --color-info-subtle: #eff6ff;
+  --color-success: #22c55e;
+  --color-success-dark: #16a34a;
+  --color-success-text: #15803d;
+  --color-success-subtle: #f0fdf4;
+  --color-success-bg: #dcfce7;
+  --color-success-border: #bbf7d0;
+  --color-warning: #f59e0b;
+  --color-warning-light: #fbbf24;
+  --color-warning-text: #b45309;
+  --color-warning-subtle: #fffbeb;
+  --color-danger: #ef4444;
+  --color-danger-dark: #dc2626;
+  --color-danger-text: #b91c1c;
+  --color-danger-subtle: #fef2f2;
+
+  /* Surface — tonal elevation system */
+  --color-surface: #ffffff;
+  --color-surface-light: #fafafa;
+  --color-surface-lighter: #f4f4f5;
+  --color-surface-border: #e4e4e7;
+  --color-surface-raised: #ffffff;
+
+  /* Text — neutral zinc scale (warmer than slate) */
+  --color-text: #18181b;
+  --color-text-strong: #09090b;
+  --color-text-secondary: #52525b;
+  --color-text-tertiary: #71717a;
+  --color-text-muted: #a1a1aa;
+
+  /* Input */
+  --color-input-border: #d4d4d8;
+
+  /* Dark surface */
+  --color-dark-surface: #18181b;
+  --color-dark-border: #27272a;
+  --color-dark-text: #fafafa;
+  --color-dark-text-muted: #a1a1aa;
+
+  /* Auth */
+  --color-auth-bg: #fafafa;
+  --color-auth-card: #ffffff;
+
+  /* Spring animation tokens */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  /* Restore pointer cursor on all interactive elements (lost when Chakra resetCSS=false) */
+  button,
+  [role="button"],
+  label[for],
+  select,
+  summary {
+    cursor: pointer;
+  }
+
+  /* Override Chakra UI's dark-mode cascade that bleeds into native elements */
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--color-text-muted) !important;
+    opacity: 1;
+  }
+
+  body {
+    background: var(--color-surface-light);
+    color: var(--color-text);
+    font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    letter-spacing: -0.011em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    font-optical-sizing: auto;
+  }
+
+  code {
+    font-family: 'JetBrains Mono', source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+  }
+}
+
+@layer components {
+  /* Vibrancy — Apple HIG-inspired translucent surfaces */
+  .glass {
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+  }
+
+  .glass-dark {
+    background: rgba(24, 24, 27, 0.78);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  /* Tonal surface — Google Luminous-inspired elevation */
+  .surface-tonal {
+    background: color-mix(in srgb, var(--color-primary) 3%, var(--color-surface));
+  }
+  .surface-tonal-raised {
+    background: color-mix(in srgb, var(--color-primary) 5%, var(--color-surface));
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-info) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Card hover — spring lift */
+  .card-hover {
+    transition: transform 0.4s var(--ease-spring), box-shadow 0.3s var(--ease-smooth);
+  }
+  .card-hover:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.03);
+  }
+
+  /* Glow effects */
+  .glow-brand {
+    box-shadow: 0 0 60px -12px var(--color-primary-glow);
+  }
+
+  /* Spring enter animation */
+  @keyframes spring-in {
+    0% { transform: scale(0.95); opacity: 0; }
+    60% { transform: scale(1.02); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .animate-spring-in {
+    animation: spring-in 0.4s var(--ease-spring) forwards;
+  }
+
+  /* Fade-scale out */
+  @keyframes fade-scale-out {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(0.96); opacity: 0; }
+  }
+  .animate-fade-out {
+    animation: fade-scale-out 0.2s var(--ease-smooth) forwards;
+  }
+
+  /* Tab animation */
+  .tab-indicator {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Shimmer loading effect */
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  .shimmer {
+    background: linear-gradient(90deg, var(--color-surface-lighter) 25%, var(--color-surface-border) 50%, var(--color-surface-lighter) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+
+  /* Side panel slide-in */
+  @keyframes slide-in-right {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+  }
+  .animate-slide-in-right {
+    animation: slide-in-right 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  /* Pulse ring for status indicators */
+  @keyframes pulse-ring {
+    0% { transform: scale(0.8); opacity: 0.5; }
+    50% { transform: scale(1.2); opacity: 0; }
+    100% { transform: scale(0.8); opacity: 0.5; }
+  }
+  .pulse-ring::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    background: currentColor;
+    animation: pulse-ring 2s ease-out infinite;
+  }
+
+  /* Toast slide-in */
+  @keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+}

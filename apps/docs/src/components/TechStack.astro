@@ -1,0 +1,142 @@
+---
+const techs = [
+  {
+    name: "React Router v7",
+    description: "File-based routing, SSR, loaders, actions, streaming, and progressive enhancement.",
+    color: "#61dafb",
+    icon: `<svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M14.23 12.004a2.236 2.236 0 0 1-2.235 2.236 2.236 2.236 0 0 1-2.236-2.236 2.236 2.236 0 0 1 2.236-2.236 2.236 2.236 0 0 1 2.235 2.236zm2.648-10.69c-1.346 0-3.107.96-4.888 2.622-1.78-1.653-3.541-2.602-4.887-2.602-.31 0-.592.055-.846.164C4.747 2.066 4.128 3.845 4.42 6.39c-2.358.89-3.875 2.22-3.875 3.614s1.517 2.724 3.875 3.614c-.292 2.545.327 4.324 1.838 4.892.254.11.536.164.846.164 1.346 0 3.107-.96 4.888-2.624 1.78 1.654 3.542 2.604 4.887 2.604.31 0 .592-.055.846-.164 1.511-.568 2.13-2.347 1.838-4.892 2.358-.89 3.875-2.22 3.875-3.614s-1.517-2.724-3.875-3.614c.292-2.545-.327-4.324-1.838-4.892a2.154 2.154 0 0 0-.846-.164zM17.9 2.82c.928.348 1.28 1.69 1.061 3.573-.054.47-.137.95-.246 1.437a18.707 18.707 0 0 0-2.408-.527 18.72 18.72 0 0 0-1.563-1.874c1.425-1.327 2.773-2.165 3.652-2.165.172 0 .328.03.468.083l.036.013zm-5.893 4.59c.357-.397.722-.774 1.091-1.128a17.2 17.2 0 0 1 1.963.414 17.159 17.159 0 0 1-.982 1.694 17.12 17.12 0 0 1-2.072-.98zm-2.01 0a17.12 17.12 0 0 1-2.073.98 17.159 17.159 0 0 1-.982-1.694 17.2 17.2 0 0 1 1.963-.414c.37.354.734.731 1.092 1.128zM12 8.12a16.16 16.16 0 0 1 1.437 1.88A16.16 16.16 0 0 1 12 11.88a16.16 16.16 0 0 1-1.437-1.88A16.16 16.16 0 0 1 12 8.12zm-5.952-1.3c-.055-.47-.138-.95-.247-1.437C6.729 2.16 7.614 1.342 8.442 1.342c.172 0 .328.03.468.083l.036.013c.928.348 1.28 1.69 1.061 3.573a18.707 18.707 0 0 0-2.408.527 18.72 18.72 0 0 0-1.563 1.874c-.109-.487-.193-.967-.247-1.437l.211-.155zm-.727 2.585a17.12 17.12 0 0 1 .68-1.175c.206.065.416.126.63.183a17.159 17.159 0 0 1-.982 1.694 17.2 17.2 0 0 1-.328-.702zm.727 5.59c.054.47.138.95.247 1.437.928-.348 1.56-1.69 1.341-3.573a18.707 18.707 0 0 0 2.408.527 18.72 18.72 0 0 0 1.563 1.874c-1.425 1.327-2.773 2.165-3.652 2.165-.172 0-.328-.03-.468-.083l-.036-.013z"/></svg>`,
+  },
+  {
+    name: "Drizzle ORM",
+    description: "Type-safe SQL, automatic migrations, Drizzle Studio. D1 in production, SQLite locally.",
+    color: "#c5f74f",
+    icon: `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>`,
+  },
+  {
+    name: "tRPC",
+    description: "Remote procedure calls with full TypeScript inference. Zero runtime overhead for types.",
+    color: "#398ccb",
+    icon: `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/><line x1="14" y1="4" x2="10" y2="20"/></svg>`,
+  },
+  {
+    name: "Inversify",
+    description: "Industrial-strength DI — constructor injection, module composition, singleton and transient scoping.",
+    color: "#e8594f",
+    icon: `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>`,
+  },
+];
+---
+
+<section class="cruz-stack">
+  <div class="stack-inner">
+    <div class="section-header">
+      <span class="section-label">Powered by the best</span>
+      <h2 class="section-title">The Stack</h2>
+    </div>
+    <div class="stack-grid">
+      {techs.map((tech) => (
+        <div class="stack-card" style={`--tech-color: ${tech.color}`}>
+          <div class="stack-icon" set:html={tech.icon} />
+          <h3 class="stack-name">{tech.name}</h3>
+          <p class="stack-description">{tech.description}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .cruz-stack {
+    padding: 5rem 2rem;
+    background: #ffffff;
+  }
+
+  .stack-inner {
+    max-width: 68rem;
+    margin: 0 auto;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .section-label {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #7c3aed;
+    margin-bottom: 0.75rem;
+  }
+
+  .section-title {
+    font-size: 2.5rem !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.03em !important;
+    color: #111827 !important;
+    border: none !important;
+    padding: 0 !important;
+  }
+
+  .stack-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+  }
+
+  .stack-card {
+    text-align: center;
+    padding: 2rem 1.5rem;
+    border-radius: 1rem;
+    border: 1px solid #e5e7eb;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .stack-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--tech-color);
+    box-shadow: 0 20px 40px -12px color-mix(in srgb, var(--tech-color) 15%, transparent);
+  }
+
+  .stack-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 1.25rem;
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--tech-color) 10%, transparent);
+    color: var(--tech-color);
+  }
+
+  .stack-name {
+    font-size: 1.1rem !important;
+    font-weight: 700 !important;
+    color: #111827 !important;
+    margin-bottom: 0.5rem !important;
+    margin-top: 0 !important;
+  }
+
+  .stack-description {
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: #6b7280 !important;
+    margin: 0 !important;
+  }
+
+  @media (max-width: 900px) {
+    .stack-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 500px) {
+    .stack-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

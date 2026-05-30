@@ -1,0 +1,18 @@
+{
+  "label": "Build a TaskBoard SaaS",
+  "badge": { "text": "Tutorial", "variant": "tip" },
+  "items": [
+    { "label": "Introduction", "slug": "tutorial/00-introduction" },
+    { "label": "01 — Create Project", "slug": "tutorial/01-create-project" },
+    { "label": "02 — Database Schema", "slug": "tutorial/02-database-schema" },
+    { "label": "03 — First Feature", "slug": "tutorial/03-first-feature" },
+    { "label": "04 — Authentication", "slug": "tutorial/04-authentication" },
+    { "label": "05 — Organizations", "slug": "tutorial/05-organizations" },
+    { "label": "06 — Permissions", "slug": "tutorial/06-permissions" },
+    { "label": "07 — Real-Time", "slug": "tutorial/07-real-time" },
+    { "label": "08 — Background Jobs", "slug": "tutorial/08-background-jobs" },
+    { "label": "09 — File Uploads", "slug": "tutorial/09-file-uploads" },
+    { "label": "10 — Billing", "slug": "tutorial/10-billing" },
+    { "label": "11 — Deployment", "slug": "tutorial/11-deployment" }
+  ]
+}

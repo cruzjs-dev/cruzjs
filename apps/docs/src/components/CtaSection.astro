@@ -1,0 +1,179 @@
+---
+---
+<section class="cruz-cta">
+  <div class="cta-glow">
+    <div class="cta-orb cta-orb-1"></div>
+    <div class="cta-orb cta-orb-2"></div>
+  </div>
+  <div class="cta-content">
+    <h2 class="cta-title">Start Building Today</h2>
+    <p class="cta-description">
+      From idea to production in minutes. Follow the tutorial and build a complete SaaS app —
+      or jump straight into the docs.
+    </p>
+    <div class="cta-actions">
+      <a href="/prologue/quick-start/" class="cta-btn cta-btn-primary">
+        Quick Start Guide
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a href="/tutorial/00-introduction/" class="cta-btn cta-btn-secondary">
+        Build a SaaS Tutorial
+      </a>
+    </div>
+    <div class="cta-links">
+      <a href="/frontend/components/" class="cta-link">UI Components</a>
+      <span class="cta-divider">/</span>
+      <a href="/architecture/request-lifecycle/" class="cta-link">Architecture</a>
+      <span class="cta-divider">/</span>
+      <a href="/adapters/cloudflare/" class="cta-link">Deployment</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cruz-cta {
+    position: relative;
+    padding: 5rem 2rem;
+    background: linear-gradient(135deg, #0f0a1a 0%, #1a1035 50%, #0f0a1a 100%);
+    overflow: hidden;
+    margin: 0 calc(-50vw + 50%);
+    width: 100vw;
+  }
+
+  .cta-glow {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .cta-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.3;
+  }
+
+  .cta-orb-1 {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, #7c3aed 0%, transparent 70%);
+    top: -100px;
+    right: 10%;
+  }
+
+  .cta-orb-2 {
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, #a855f7 0%, transparent 70%);
+    bottom: -80px;
+    left: 15%;
+  }
+
+  .cta-content {
+    position: relative;
+    z-index: 1;
+    max-width: 40rem;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .cta-title {
+    font-size: 2.75rem !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.03em !important;
+    background: linear-gradient(135deg, #c4b5fd 0%, #a855f7 50%, #c084fc 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text;
+    margin-bottom: 1rem !important;
+    border: none !important;
+    padding: 0 !important;
+    color: transparent !important;
+  }
+
+  .cta-description {
+    font-size: 1.15rem;
+    line-height: 1.7;
+    color: #a0919f !important;
+    margin-bottom: 2rem !important;
+  }
+
+  .cta-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+  }
+
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 2rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none !important;
+    transition: all 0.2s ease;
+  }
+
+  .cta-btn-primary {
+    background: linear-gradient(135deg, #7c3aed, #a855f7);
+    color: white !important;
+    box-shadow: 0 4px 20px rgba(124, 58, 237, 0.3);
+  }
+
+  .cta-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(124, 58, 237, 0.5);
+  }
+
+  .cta-btn-secondary {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e8e0f0 !important;
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .cta-btn-secondary:hover {
+    border-color: rgba(124, 58, 237, 0.5);
+    background: rgba(124, 58, 237, 0.1);
+    transform: translateY(-2px);
+  }
+
+  .cta-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .cta-link {
+    color: #a0919f !important;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none !important;
+    transition: color 0.2s ease;
+  }
+
+  .cta-link:hover {
+    color: #c4b5fd !important;
+  }
+
+  .cta-divider {
+    color: rgba(255, 255, 255, 0.15);
+    font-size: 0.8rem;
+  }
+
+  @media (max-width: 768px) {
+    .cta-title {
+      font-size: 2rem !important;
+    }
+
+    .cta-description {
+      font-size: 1rem;
+    }
+  }
+</style>

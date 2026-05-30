@@ -1,0 +1,79 @@
+{
+  "name": "@cruzjs/start",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./routing": "./src/routing/index.ts",
+    "./ai-connections": "./src/ai-connections/index.ts",
+    "./ai-connections/components": "./src/ai-connections/components/index.ts",
+    "./api-keys": "./src/api-keys/index.ts",
+    "./api-keys/components": "./src/api-keys/components/index.ts",
+    "./dashboard": "./src/dashboard/index.ts",
+    "./dashboard/components": "./src/dashboard/components/index.ts",
+    "./integrations": "./src/integrations/index.ts",
+    "./integrations/components": "./src/integrations/components/index.ts",
+    "./layout": "./src/layout/index.ts",
+    "./notifications": "./src/notifications/index.ts",
+    "./notifications/components": "./src/notifications/components/index.ts",
+    "./pages": "./src/pages/index.ts",
+    "./real-time": "./src/real-time/index.ts",
+    "./real-time/components": "./src/real-time/components/index.ts",
+    "./orgs": "./src/orgs/index.ts",
+    "./orgs/components": "./src/orgs/components/index.ts",
+    "./orgs/components/*": "./src/orgs/components/*.tsx",
+    "./orgs/pages": "./src/orgs/pages/index.ts",
+    "./orgs/pages/*": "./src/orgs/pages/*.tsx",
+    "./orgs/*": "./src/orgs/*.ts",
+    "./social-auth": "./src/social-auth/index.ts",
+    "./social-auth/*": "./src/social-auth/*.ts",
+    "./user-profile": "./src/user-profile/index.ts",
+    "./upload": "./src/upload/index.ts",
+    "./user-profile/components": "./src/user-profile/components/index.ts",
+    "./forms": "./src/forms/index.ts",
+    "./trpc/routers": "./src/trpc/routers.ts",
+    "./routing/*": "./src/routing/*.ts",
+    "./trpc/*": "./src/trpc/*.ts",
+    "./pages/*": "./src/pages/*.tsx",
+    "./layout/*": "./src/layout/*.tsx",
+    "./*": "./src/*"
+  },
+  "scripts": {
+    "build": "tsup"
+  },
+  "files": [
+    "dist/",
+    "src/",
+    "README.md"
+  ],
+  "peerDependencies": {
+    "@cruzjs/core": ">=0.0.1",
+    "drizzle-orm": ">=0.36.0",
+    "inversify": ">=7.0.0",
+    "reflect-metadata": ">=0.2.0",
+    "zod": ">=3.0.0",
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0",
+    "react-router": ">=7.0.0",
+    "@trpc/server": ">=11.0.0"
+  },
+  "dependencies": {
+    "@chakra-ui/icons": "^2.2.4",
+    "@chakra-ui/react": "^2.10.9",
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@paralleldrive/cuid2": "^2.2.2",
+    "@tanstack/react-query": "^5.90.7",
+    "@trpc/client": "^11.7.1",
+    "@trpc/react-query": "^11.7.1",
+    "framer-motion": "^10.18.0",
+    "recharts": "^3.8.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

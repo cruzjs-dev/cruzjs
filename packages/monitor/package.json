@@ -1,0 +1,33 @@
+{
+  "name": "@cruzjs/monitor",
+  "version": "0.0.1",
+  "description": "CruzJS Monitor — debug dashboard + queue monitoring",
+  "type": "module",
+  "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./monitor": "./src/monitor/index.ts",
+    "./queue-monitor": "./src/queue-monitor/index.ts",
+    "./tracing": "./src/tracing/index.ts",
+    "./*": "./src/*"
+  },
+  "files": [
+    "dist/",
+    "src/",
+    "README.md"
+  ],
+  "peerDependencies": {
+    "@cruzjs/core": ">=0.0.1",
+    "drizzle-orm": ">=0.36.0",
+    "inversify": ">=7.0.0",
+    "reflect-metadata": ">=0.2.0",
+    "zod": ">=3.0.0",
+    "@trpc/server": ">=11.0.0"
+  },
+  "dependencies": {
+    "@paralleldrive/cuid2": "^2.2.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

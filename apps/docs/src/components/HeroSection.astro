@@ -1,0 +1,304 @@
+---
+---
+<section class="cruz-hero">
+  <div class="hero-glow">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      Open Source Full-Stack Framework
+    </div>
+    <h1 class="hero-title">
+      <span class="gradient-text">The Full-Stack Framework</span>
+      <br />
+      <span class="white-text">TypeScript Has Been Missing</span>
+    </h1>
+    <p class="hero-tagline">
+      Type-safe APIs, dependency injection, multi-tenant auth, 124+ UI components,
+      and a single CLI — from idea to production on Cloudflare's edge.
+    </p>
+    <div class="hero-terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot red"></span>
+        <span class="terminal-dot yellow"></span>
+        <span class="terminal-dot green"></span>
+        <span class="terminal-title">Terminal</span>
+      </div>
+      <div class="terminal-body">
+        <span class="terminal-prompt">$</span>
+        <span class="terminal-command">npm create @cruzjs my-app</span>
+        <span class="terminal-cursor"></span>
+      </div>
+    </div>
+    <div class="hero-actions">
+      <a href="/prologue/quick-start/" class="btn btn-primary">
+        Get Started
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a href="https://github.com/cruzjs/cruzjs" class="btn btn-secondary">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cruz-hero {
+    position: relative;
+    padding: 6rem 2rem 5rem;
+    overflow: hidden;
+    background: linear-gradient(180deg, #0f0a1a 0%, #1a1035 40%, #0f0a1a 100%);
+    margin: -1rem calc(-50vw + 50%) 0;
+    width: 100vw;
+  }
+
+  .hero-glow {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.5;
+    animation: float 8s ease-in-out infinite;
+  }
+
+  .orb-1 {
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, #7c3aed 0%, transparent 70%);
+    top: -100px;
+    left: 10%;
+    animation-delay: 0s;
+  }
+
+  .orb-2 {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, #a855f7 0%, transparent 70%);
+    top: 50px;
+    right: 5%;
+    animation-delay: -3s;
+  }
+
+  .orb-3 {
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, #6d28d9 0%, transparent 70%);
+    bottom: -50px;
+    left: 40%;
+    animation-delay: -5s;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-30px) scale(1.05); }
+  }
+
+  .hero-content {
+    position: relative;
+    max-width: 52rem;
+    margin: 0 auto;
+    text-align: center;
+    z-index: 1;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 1rem;
+    border-radius: 9999px;
+    border: 1px solid rgba(124, 58, 237, 0.4);
+    background: rgba(124, 58, 237, 0.1);
+    color: #c4b5fd;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    margin-bottom: 2rem;
+  }
+
+  .badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #a855f7;
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.3); }
+  }
+
+  .hero-title {
+    font-size: 4.5rem !important;
+    font-weight: 800 !important;
+    line-height: 1.05 !important;
+    letter-spacing: -0.04em !important;
+    margin-bottom: 1.5rem !important;
+    -webkit-text-fill-color: unset !important;
+    background: none !important;
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, #c4b5fd 0%, #a855f7 30%, #7c3aed 60%, #c084fc 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .white-text {
+    color: #e8e0f0 !important;
+    -webkit-text-fill-color: #e8e0f0 !important;
+  }
+
+  .hero-tagline {
+    font-size: 1.25rem;
+    line-height: 1.75;
+    color: #a0919f !important;
+    max-width: 36rem;
+    margin: 0 auto 2.5rem !important;
+  }
+
+  .hero-terminal {
+    max-width: 28rem;
+    margin: 0 auto 2.5rem;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    border: 1px solid rgba(124, 58, 237, 0.3);
+    background: rgba(15, 10, 26, 0.8);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 40px rgba(124, 58, 237, 0.15);
+  }
+
+  .terminal-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0.6rem 0.875rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .terminal-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .terminal-dot.red { background: #f87171; }
+  .terminal-dot.yellow { background: #fbbf24; }
+  .terminal-dot.green { background: #34d399; }
+
+  .terminal-title {
+    flex: 1;
+    text-align: center;
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.3);
+    font-weight: 500;
+  }
+
+  .terminal-body {
+    padding: 1rem 1.25rem;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .terminal-prompt {
+    color: #a855f7;
+    font-weight: 700;
+  }
+
+  .terminal-command {
+    color: #e8e0f0;
+  }
+
+  .terminal-cursor {
+    display: inline-block;
+    width: 8px;
+    height: 1.2em;
+    background: #a855f7;
+    animation: blink 1.2s step-end infinite;
+    border-radius: 1px;
+  }
+
+  @keyframes blink {
+    50% { opacity: 0; }
+  }
+
+  .hero-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 2rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #7c3aed, #a855f7);
+    color: white !important;
+    box-shadow: 0 4px 20px rgba(124, 58, 237, 0.3);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(124, 58, 237, 0.5);
+  }
+
+  .btn-secondary {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e8e0f0 !important;
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .btn-secondary:hover {
+    border-color: rgba(124, 58, 237, 0.5);
+    background: rgba(124, 58, 237, 0.1);
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 768px) {
+    .cruz-hero {
+      padding: 4rem 1.5rem 3.5rem;
+    }
+
+    .hero-title {
+      font-size: 2.75rem !important;
+    }
+
+    .hero-tagline {
+      font-size: 1.05rem;
+    }
+
+    .hero-terminal {
+      max-width: 100%;
+    }
+
+    .terminal-body {
+      font-size: 0.8rem;
+    }
+  }
+</style>

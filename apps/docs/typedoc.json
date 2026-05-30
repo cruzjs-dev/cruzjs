@@ -1,0 +1,15 @@
+{
+  "entryPoints": [
+    "../../packages/core/src/index.ts",
+    "../../packages/start/src/index.ts"
+  ],
+  "plugin": ["typedoc-plugin-markdown"],
+  "out": "src/content/docs/api",
+  "readme": "none",
+  "categorizeByGroup": true,
+  "excludePrivate": true,
+  "excludeInternal": true,
+  "githubPages": false,
+  "hidePageHeader": true,
+  "flattenOutputFiles": false
+}

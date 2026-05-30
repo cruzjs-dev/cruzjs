@@ -1,0 +1,26 @@
+{
+  "name": "@cruzjs/create",
+  "version": "0.0.1",
+  "description": "Scaffold a new CruzJS application (npm create @cruzjs).",
+  "type": "module",
+  "main": "src/index.ts",
+  "bin": {
+    "cruz-create": "./src/index.ts"
+  },
+  "files": [
+    "dist/",
+    "src/",
+    "templates/",
+    "README.md"
+  ],
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "fs-extra": "^11.2.0"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^22.10.1",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  }
+}

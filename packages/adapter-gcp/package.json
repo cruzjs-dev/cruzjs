@@ -1,0 +1,19 @@
+{
+  "name": "@cruzjs/adapter-gcp",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "src/",
+    "README.md"
+  ],
+  "peerDependencies": {
+    "@cruzjs/core": ">=0.0.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

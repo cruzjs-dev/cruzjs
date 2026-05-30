@@ -1,0 +1,188 @@
+---
+const pillars = [
+  {
+    title: "Canonical knowledge base",
+    desc: "34 KB docs install to .cruzjs/ as one source of truth — architecture, DI, tRPC, auth, data ownership, deployment.",
+  },
+  {
+    title: "13 slash commands",
+    desc: "Repeatable workflows: /new-feature, /dev, /code-review, /qa, /create-ui-component, and more.",
+  },
+  {
+    title: "8 agent personas",
+    desc: "Architect, developer, code reviewer, QA, and UI/UX designers — each primed with CruzJS conventions.",
+  },
+];
+
+const harnesses = ["Claude Code", "Cursor", "Codex", "OpenCode", "Antigravity"];
+---
+
+<section class="cruz-ai">
+  <div class="ai-inner">
+    <div class="section-header">
+      <span class="section-label">Built for AI</span>
+      <h2 class="section-title">Your AI assistant already knows CruzJS</h2>
+      <p class="section-description">
+        <code>npx @cruzjs/skills init</code> installs a portable knowledge base, command
+        suite, and agent personas — so your coding assistant follows framework
+        patterns out of the box. One source of truth, five tools.
+      </p>
+    </div>
+
+    <div class="pillars-grid">
+      {pillars.map((p) => (
+        <div class="pillar-card">
+          <h3 class="pillar-title">{p.title}</h3>
+          <p class="pillar-desc">{p.desc}</p>
+        </div>
+      ))}
+    </div>
+
+    <div class="harness-row">
+      <span class="harness-label">Works with</span>
+      {harnesses.map((h) => <span class="harness-chip">{h}</span>)}
+    </div>
+
+    <div class="ai-cta">
+      <a href="/getting-started/skills/" class="ai-cta-link">Explore @cruzjs/skills →</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cruz-ai {
+    padding: 5rem 2rem;
+    background: linear-gradient(180deg, #faf5ff, #ffffff);
+  }
+
+  .ai-inner {
+    max-width: 68rem;
+    margin: 0 auto;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .section-label {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #7c3aed;
+    margin-bottom: 0.75rem;
+  }
+
+  .section-title {
+    font-size: 2.5rem !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.03em !important;
+    color: #111827 !important;
+    margin-bottom: 1rem !important;
+    border: none !important;
+    padding: 0 !important;
+  }
+
+  .section-description {
+    font-size: 1.15rem;
+    color: #6b7280 !important;
+    max-width: 40rem;
+    margin: 0 auto !important;
+    line-height: 1.7;
+  }
+
+  .section-description code {
+    background: #f3e8ff;
+    color: #6d28d9;
+    padding: 0.1rem 0.4rem;
+    border-radius: 0.4rem;
+    font-size: 0.95rem;
+  }
+
+  .pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .pillar-card {
+    padding: 1.75rem;
+    border-radius: 1rem;
+    border: 1px solid #e9d5ff;
+    background: #ffffff;
+    transition: all 0.3s ease;
+  }
+
+  .pillar-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px -8px rgba(124, 58, 237, 0.15);
+    border-color: #7c3aed;
+  }
+
+  .pillar-title {
+    font-size: 1.05rem !important;
+    font-weight: 700 !important;
+    color: #111827 !important;
+    margin: 0 0 0.5rem 0 !important;
+    border: none !important;
+    padding: 0 !important;
+  }
+
+  .pillar-desc {
+    font-size: 0.9rem;
+    color: #6b7280;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .harness-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+  }
+
+  .harness-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .harness-chip {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #6d28d9;
+    background: #f3e8ff;
+    padding: 0.35rem 0.85rem;
+    border-radius: 999px;
+  }
+
+  .ai-cta {
+    text-align: center;
+  }
+
+  .ai-cta-link {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #7c3aed;
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  .ai-cta-link:hover {
+    color: #5b21b6;
+  }
+
+  @media (max-width: 800px) {
+    .pillars-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

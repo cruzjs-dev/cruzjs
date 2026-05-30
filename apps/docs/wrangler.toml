@@ -1,0 +1,24 @@
+name = "cruzjs-docs"
+compatibility_date = "2026-05-29"
+# Pin the account — the OAuth token can see multiple accounts; this is the one
+# where the cruzjs.dev zone + docs project live (kerrylritter@gmail.com).
+account_id = "f9296c16a93f1ab8bb64d0d3e0eee0f8"
+
+# Astro Starlight builds a fully static site into ./dist.
+# Workers Static Assets serves it directly from the edge.
+[assets]
+directory = "./dist"
+# Starlight emits a real /404.html — serve it on unmatched paths.
+not_found_handling = "404-page"
+
+# Custom domains are provisioned automatically on `wrangler deploy`.
+# Each entry creates a PROXIED DNS record + edge cert for the hostname,
+# so no grey-cloud / SSL-mismatch errors. Both hosts serve identical content;
+# apex->www canonicalization is handled by a CF Redirect Rule (see README).
+[[routes]]
+pattern = "www.cruzjs.dev"
+custom_domain = true
+
+[[routes]]
+pattern = "cruzjs.dev"
+custom_domain = true

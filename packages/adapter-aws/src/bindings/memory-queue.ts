@@ -1,0 +1,35 @@
+import type { QueueBinding, LocalQueueLike } from '@cruzjs/core/runtime';
+
+/**
+ * In-memory queue for local development / testing.
+ * In production, SQS queues are used.
+ */
+export class MemoryQueueBinding<T = unknown>
+  implements QueueBinding<T>, LocalQueueLike<T>
+{
+  private consumer: ((message: T) => Promise<void>) | null = null;
+
+  constructor(private readonly queueName: string) {}
+
+  onMessage(callback: (message: T) => Promise<void>): void {
+    this.consumer = callback;
+  }
+
+  async send(message: T): Promise<void> {
+    if (!this.consumer) {
+      console.warn(
+        `[MemoryQueue:${this.queueName}] No consumer registered, message dropped`,
+      );
+      return;
+    }
+    try {
+      await this.consumer(message);
+    } catch (error) {
+      console.error(`[MemoryQueue:${this.queueName}] Consumer error:`, error);
+    }
+  }
+
+  async sendBatch(messages: { body: T }[]): Promise<void> {
+    for (const msg of messages) await this.send(msg.body);
+  }
+}

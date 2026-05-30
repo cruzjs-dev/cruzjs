@@ -1,0 +1,37 @@
+# Local development configuration for CruzJS
+# This file is checked in and used by `npm run dev`.
+# It contains only local-dev placeholder IDs — no real resource IDs.
+
+name = "cruzjs-local"
+compatibility_date = "2024-12-01"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = "./dist/client"
+
+# D1 Database (local dev)
+[[d1_databases]]
+binding = "DB"
+database_name = "cruzjs-local-db"
+database_id = "local-dev-db"
+migrations_dir = "./src/database/migrations/sqlite"
+
+# KV Cache (local dev)
+[[kv_namespaces]]
+binding = "CACHE_KV"
+id = "local-dev-cache-kv"
+
+# Workers AI
+[ai]
+binding = "AI"
+
+# Local development variables
+[vars]
+APP_NAME = "CruzJS"
+APP_URL = "http://localhost:5000"
+NODE_ENV = "development"
+EMAIL_PROVIDER = "mailchannels"
+CF_AI_GATEWAY_ID = "cruzjs"
+CLOUDFLARE_ACCOUNT_ID = ""
+SESSION_SECRET = "local-dev-session-secret-change-in-prod"
+CSRF_SECRET = "local-dev-csrf-secret-change-in-prod"
+JWT_SECRET = "local-dev-jwt-secret-change-in-prod"
+JWT_REFRESH_SECRET = "local-dev-jwt-refresh-secret-change-in-prod"

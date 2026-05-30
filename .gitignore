@@ -1,0 +1,76 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Testing
+coverage/
+.nyc_output/
+
+# Production
+dist/
+build/
+
+# Environment variables
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.staging
+.env.production
+
+# Infrastructure configuration
+infrastructure-deploy-output-*.txt
+infrastructure-failure-*.log
+
+.lambda-build/
+.react-router/
+.wrangler/
+.cruz/
+
+# Deploy CLI — generated wrangler configs (deploy-time), keep wrangler.dev.toml (local dev)
+apps/demo/wrangler.toml
+apps/demo/wrangler.jsonc
+.deploy-cloudflare.json
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# TypeScript
+*.tsbuildinfo
+
+playwright-report/
+test-results/
+.playwright-mcp
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# OS
+Thumbs.db
+
+# Local development data
+data/
+
+# Aurora CLI runtime files (dev server PID + logs)
+.aurora/dev-server.pid
+.aurora/dev-server.log
+*.png
+
+# Local secrets — never commit
+.env
+.dev.vars

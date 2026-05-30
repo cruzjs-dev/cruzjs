@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.wrangler/
+.react-router/
+.env
+.dev.vars
+*.local

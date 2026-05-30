@@ -1,0 +1,21 @@
+{
+  "name": "@cruzjs/adapter-cloudflare",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "src/",
+    "README.md"
+  ],
+  "peerDependencies": {
+    "@cruzjs/core": ">=0.0.1",
+    "drizzle-orm": ">=0.36.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260124.0",
+    "typescript": "^5.9.3"
+  }
+}

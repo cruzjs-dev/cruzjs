@@ -1,0 +1,28 @@
+{
+  "name": "@cruzjs/skills",
+  "version": "0.0.1",
+  "type": "module",
+  "description": "Claude Code commands, knowledge base, and agent personas for CruzJS development",
+  "bin": {
+    "cruzjs-skills": "./bin/setup.js"
+  },
+  "files": [
+    "bin/",
+    "templates/",
+    "README.md"
+  ],
+  "keywords": [
+    "cruzjs",
+    "claude-code",
+    "ai-coding",
+    "developer-tools",
+    "typescript",
+    "full-stack"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cruzjs/cruzjs",
+    "directory": "packages/skills"
+  }
+}
