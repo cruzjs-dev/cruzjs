@@ -1,6 +1,6 @@
 {
   "name": "@cruzjs/create",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Scaffold a new CruzJS application (npm create @cruzjs).",
   "type": "module",
   "main": "src/index.ts",
