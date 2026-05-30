@@ -1,6 +1,6 @@
 {
   "name": "@cruzjs/adapter-digitalocean",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "type": "module",
   "main": "src/index.ts",
   "exports": {
@@ -11,7 +11,7 @@
     "README.md"
   ],
   "peerDependencies": {
-    "@cruzjs/core": "0.0.2"
+    "@cruzjs/core": "0.0.3"
   },
   "devDependencies": {
     "typescript": "^5.9.3"

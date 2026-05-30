@@ -1,6 +1,6 @@
 {
   "name": "@cruzjs/saas",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "type": "module",
   "main": "src/index.ts",
   "exports": {
@@ -33,7 +33,7 @@
     "README.md"
   ],
   "peerDependencies": {
-    "@cruzjs/core": "0.0.2",
+    "@cruzjs/core": "0.0.3",
     "drizzle-orm": ">=0.36.0",
     "inversify": ">=7.0.0",
     "reflect-metadata": ">=0.2.0",
