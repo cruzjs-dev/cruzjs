@@ -1,11 +1,14 @@
 {
   "name": "@cruzjs/create",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Scaffold a new CruzJS application (npm create @cruzjs).",
   "type": "module",
   "main": "src/index.ts",
   "bin": {
     "cruz-create": "./src/index.ts"
+  },
+  "scripts": {
+    "sync:migrations": "tsx scripts/sync-starter-migrations.ts"
   },
   "files": [
     "dist/",

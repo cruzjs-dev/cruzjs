@@ -26,22 +26,8 @@
     {
       "idx": 3,
       "version": "6",
-      "when": 1748188922000,
-      "tag": "0003_add_chatbots",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "6",
-      "when": 1748188923000,
-      "tag": "0004_add_pdfs",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "6",
-      "when": 1748188924000,
-      "tag": "0005_add_social_account",
+      "when": 1748188921000,
+      "tag": "0003_add_social_account",
       "breakpoints": true
     }
   ]

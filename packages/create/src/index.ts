@@ -90,9 +90,9 @@ function copyTemplate(templateDir: string, targetDir: string): void {
 function generatePackageJson(options: Options): string {
   const deps: Record<string, string> = {
     '@chakra-ui/react': '^2.8.0',
-    '@cruzjs/core': '^0.1.17',
-    '@cruzjs/drizzle-universal': '^0.1.0',
-    '@cruzjs/ui': '^0.1.3',
+    '@cruzjs/core': '^0.0.4',
+    '@cruzjs/drizzle-universal': '^0.0.4',
+    '@cruzjs/ui': '^0.0.4',
     '@emotion/react': '^11',
     '@emotion/styled': '^11',
     '@paralleldrive/cuid2': '^2.2.2',
@@ -108,8 +108,8 @@ function generatePackageJson(options: Options): string {
   };
 
   // StartModule depends on saas — both always included for a working scaffold
-  deps['@cruzjs/start'] = '^0.1.11';
-  deps['@cruzjs/saas'] = '^0.1.11';
+  deps['@cruzjs/start'] = '^0.0.4';
+  deps['@cruzjs/saas'] = '^0.0.4';
 
   const pkg = {
     name: options.projectName,
@@ -133,7 +133,7 @@ function generatePackageJson(options: Options): string {
       '@babel/plugin-proposal-decorators': '^7.25.9',
       '@babel/plugin-syntax-typescript': '^7.25.9',
       '@babel/plugin-transform-class-properties': '^7.25.9',
-      '@cruzjs/cli': '^0.1.4',
+      '@cruzjs/cli': '^0.0.4',
       '@cloudflare/workers-types': '^4.20260124.0',
       '@react-router/dev': '^7.11.0',
       '@tailwindcss/postcss': '^4.1.17',
@@ -241,6 +241,7 @@ directory = "./dist/client"
 binding = "DB"
 database_name = "${name}-db"
 database_id = ""
+migrations_dir = "./src/database/migrations/sqlite"
 `;
 }
 
@@ -257,6 +258,7 @@ directory = "./dist/client"
 binding = "DB"
 database_name = "${name}-dev-db"
 database_id = "local"
+migrations_dir = "./src/database/migrations/sqlite"
 
 [[kv_namespaces]]
 binding = "KV"
@@ -269,7 +271,7 @@ function generateDrizzleConfig(): string {
 
 export default {
   schema: './src/database/schema.ts',
-  out: './migrations',
+  out: './src/database/migrations/sqlite',
   dialect: 'sqlite',
   driver: 'd1-http',
 } satisfies Config;
@@ -399,6 +401,7 @@ async function main(): Promise<void> {
   if (options.saas) {
     console.log(`  # Add your Stripe keys to .env`);
   }
+  console.log(`  npm run db:migrate`);
   console.log(`  cruz dev`);
   console.log('');
 }

@@ -159,6 +159,25 @@ function bindProvider(container: Container, provider: Provider): void {
     return;
   }
 
+  if (isUseValueProvider(provider)) {
+    // UseValue - constant value
+    const token = resolveProviderToken(provider.provide);
+    container.bind(token).toConstantValue(provider.useValue);
+    return;
+  }
+
+  if (isMultiProvider(provider)) {
+    // Multi - multiple bindings to same token (for @MultiInject)
+    const token = resolveProviderToken(provider.provide);
+    const binding = container.bind(token).to(provider.useClass);
+    if (provider.scope === 'transient') {
+      binding.inTransientScope();
+    } else {
+      binding.inSingletonScope();
+    }
+    return;
+  }
+
   if (isUseClassProvider(provider)) {
     // UseClass - bind provide token to useClass implementation
     const token = resolveProviderToken(provider.provide);
@@ -172,13 +191,6 @@ function bindProvider(container: Container, provider: Provider): void {
     } else {
       binding.inSingletonScope();
     }
-    return;
-  }
-
-  if (isUseValueProvider(provider)) {
-    // UseValue - constant value
-    const token = resolveProviderToken(provider.provide);
-    container.bind(token).toConstantValue(provider.useValue);
     return;
   }
 
@@ -207,18 +219,6 @@ function bindProvider(container: Container, provider: Provider): void {
     container
       .bind(token)
       .toDynamicValue((context) => context.get(existingToken));
-    return;
-  }
-
-  if (isMultiProvider(provider)) {
-    // Multi - multiple bindings to same token (for @MultiInject)
-    const token = resolveProviderToken(provider.provide);
-    const binding = container.bind(token).to(provider.useClass);
-    if (provider.scope === 'transient') {
-      binding.inTransientScope();
-    } else {
-      binding.inSingletonScope();
-    }
     return;
   }
 

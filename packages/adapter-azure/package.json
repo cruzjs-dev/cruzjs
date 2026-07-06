@@ -1,6 +1,6 @@
 {
   "name": "@cruzjs/adapter-azure",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "type": "module",
   "main": "src/index.ts",
   "exports": {
@@ -11,7 +11,7 @@
     "README.md"
   ],
   "peerDependencies": {
-    "@cruzjs/core": "0.0.3"
+    "@cruzjs/core": "0.0.4"
   },
   "devDependencies": {
     "typescript": "^5.9.3"

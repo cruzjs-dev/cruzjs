@@ -1,10 +1,11 @@
 @import 'tailwindcss';
 
-/* Scan @cruz/* package sources for Tailwind utility classes */
+/* Standalone app: scan @cruzjs packages from node_modules + local src */
 @source "../node_modules/@cruzjs/core/src/**/*.{ts,tsx}";
 @source "../node_modules/@cruzjs/start/src/**/*.{ts,tsx}";
 @source "../node_modules/@cruzjs/saas/src/**/*.{ts,tsx}";
 @source "../node_modules/@cruzjs/ui/src/**/*.{ts,tsx}";
+@source "./**/*.{ts,tsx}";
 
 @theme {
   /* Brand — vibrant indigo with full tonal range */

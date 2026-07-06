@@ -21,6 +21,7 @@
     "version": "changeset version",
     "release": "changeset publish",
     "build:all": "npm run build --workspace=packages/core && npm run build --workspace=packages/saas && npm run build --workspace=packages/start && npm run build --workspace=packages/ui && npm run build --workspace=packages/cli",
+    "publish:all": "bash scripts/publish-all.sh",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
