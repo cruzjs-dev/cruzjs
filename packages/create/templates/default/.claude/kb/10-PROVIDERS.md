@@ -1,6 +1,6 @@
 # Feature Modules
 
-Feature modules are the primary extension mechanism. Use `@Module` and register via `createCruzApp({ modules: [...] })`.
+Feature modules are the primary extension mechanism. Use `@Module` and register via `registerModules([...])` in `src/app.server.ts`.
 
 
 ## Creating a Module
@@ -22,28 +22,25 @@ export class NotesModule {}
 
 ## Registration
 
-In `server.cloudflare.ts`:
+In `src/app.server.ts`:
 
 ```typescript
-import { createCruzApp } from '@cruzjs/core';
-import { CloudflareAdapter } from '@cruzjs/adapter-cloudflare';
-import { StartModule } from '@cruzjs/start';
+import 'reflect-metadata';
+import { DrizzleService } from '@cruzjs/core/shared/database/drizzle.service';
+import { registerModules } from '@cruzjs/core/framework/module-registry';
+import { StartModule } from '@cruzjs/start/start.module';
 import * as schema from './database/schema';
 import { NotesModule } from './features/notes';
 
-export default createCruzApp({
-  schema,
-  modules: [StartModule, NotesModule],
-  adapter: new CloudflareAdapter(),
-  pages: () => import('virtual:react-router/server-build'),
-});
+DrizzleService.setSchema(schema);
+
+registerModules([StartModule, NotesModule]);
 ```
 
 ## Module Lifecycle
 
 ```
-1. createCruzApp({ schema, modules, adapter, pages })
-   ├── Set database schema
+1. registerModules([StartModule, ...your modules])
    ├── Create CruzContainer
    ├── Load Core modules (Auth, Email, Job, Upload, Shared)
    ├── Load Start modules (Org, Members, Permissions)
@@ -136,4 +133,4 @@ src/features/blog/
 2. Use `@Module` for providers, routers, and events
 3. Never modify `@cruzjs/core`, `@cruzjs/start`, or `@cruzjs/saas` -- extend via modules
 4. Keep modules focused -- one responsibility per module
-5. Register all modules in `createCruzApp({ modules: [...] })`
+5. Register all modules in `registerModules([...])` in `src/app.server.ts`

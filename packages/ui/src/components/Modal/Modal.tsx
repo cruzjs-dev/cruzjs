@@ -1,4 +1,5 @@
 import React, { forwardRef, useCallback, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { useIsMobile } from '../../hooks/useIsMobile';
 
 export type ModalSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';
@@ -43,6 +44,7 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(function Modal(
 ) {
   const isMobile = useIsMobile();
   const panelRef = useRef<HTMLDivElement>(null);
+  const modalRootRef = useRef<HTMLDivElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
 
   const handleEscape = useCallback(
@@ -63,7 +65,7 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(function Modal(
     document.addEventListener('keydown', handleEscape);
 
     const siblings = Array.from(document.body.children).filter(
-      (c) => c !== panelRef.current?.closest('[data-modal-root]'),
+      (c) => c !== modalRootRef.current,
     );
     siblings.forEach((s) => s.setAttribute('inert', ''));
 
@@ -95,28 +97,26 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(function Modal(
   const titleId = title ? 'modal-title' : undefined;
   const descId = description ? 'modal-desc' : undefined;
 
-  if (isMobile) {
-    return (
-      <MobileSheet
-        ref={ref}
-        panelRef={panelRef}
-        onClose={onClose}
-        onBackdropClick={handleBackdropClick}
-        showCloseButton={showCloseButton}
-        title={title}
-        description={description}
-        footer={footer}
-        titleId={titleId}
-        descId={descId}
-        className={className}
-      >
-        {children}
-      </MobileSheet>
-    );
-  }
-
-  return (
+  const content = isMobile ? (
+    <MobileSheet
+      ref={ref}
+      panelRef={panelRef}
+      modalRootRef={modalRootRef}
+      onClose={onClose}
+      onBackdropClick={handleBackdropClick}
+      showCloseButton={showCloseButton}
+      title={title}
+      description={description}
+      footer={footer}
+      titleId={titleId}
+      descId={descId}
+      className={className}
+    >
+      {children}
+    </MobileSheet>
+  ) : (
     <div
+      ref={modalRootRef}
       data-modal-root=""
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
       onClick={handleBackdropClick}
@@ -175,6 +175,12 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(function Modal(
       <style>{modalKeyframes}</style>
     </div>
   );
+
+  if (typeof document === 'undefined') {
+    return content;
+  }
+
+  return createPortal(content, document.body);
 });
 
 Modal.displayName = 'Modal';
@@ -191,10 +197,11 @@ type MobileSheetProps = {
   className?: string;
   children: React.ReactNode;
   panelRef: React.RefObject<HTMLDivElement | null>;
+  modalRootRef: React.RefObject<HTMLDivElement | null>;
 };
 
 const MobileSheet = forwardRef<HTMLDivElement, MobileSheetProps>(function MobileSheet(
-  { onClose, onBackdropClick, showCloseButton, title, description, footer, titleId, descId, className, children, panelRef },
+  { onClose, onBackdropClick, showCloseButton, title, description, footer, titleId, descId, className, children, panelRef, modalRootRef },
   ref,
 ) {
   const sheetRef = useRef<HTMLDivElement>(null);
@@ -250,6 +257,7 @@ const MobileSheet = forwardRef<HTMLDivElement, MobileSheetProps>(function Mobile
 
   return (
     <div
+      ref={modalRootRef}
       data-modal-root=""
       className="fixed inset-0 z-50 flex items-end"
       onClick={onBackdropClick}

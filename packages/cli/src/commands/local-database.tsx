@@ -169,7 +169,12 @@ main().catch((err) => { console.error(err); process.exit(1); });
             const tmpRunner = resolve(appDir, '.cruz-seed-runner.ts');
             writeFileSync(tmpRunner, runnerScript);
             try {
-              code = await runStreamingCommand('npx', ['tsx', tmpRunner], { cwd: appDir });
+              // Run through vite-node (not tsx): seeders import @cruzjs/core services
+              // whose @Inject() constructors need `design:paramtypes` metadata for
+              // inversify. tsx/esbuild does NOT emit decorator metadata; vite-node
+              // uses the app's vite.config babel pipeline (which does), matching
+              // `cruz dev`/`cruz build`.
+              code = await runStreamingCommand('npx', ['vite-node', tmpRunner], { cwd: appDir });
             } finally {
               try { unlinkSync(tmpRunner); } catch { /* ignore */ }
             }
@@ -193,7 +198,8 @@ main().catch((err) => { console.error(err); process.exit(1); });
                 await runStreamingCommand('npx', ['wrangler', 'd1', 'migrations', 'apply', dbName, ...devConfigArgs2, '--local'], { cwd: appDir });
               }
             }
-            code = await runStreamingCommand('npx', ['tsx', legacySeedFile], { cwd: appDir });
+            // vite-node (not tsx) so decorator metadata is emitted — see note above.
+            code = await runStreamingCommand('npx', ['vite-node', legacySeedFile], { cwd: appDir });
           } else {
             setError('No seeders found. Create src/database/seeders/*.ts or src/database/seed.ts');
             setStatus('error');

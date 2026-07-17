@@ -222,7 +222,7 @@ This starts a local development server with:
 - In-memory KV namespace for caching
 - Full tRPC endpoint at `/api/trpc/*`
 
-Visit [http://localhost:5173](http://localhost:5173) to see your application.
+Visit [http://localhost:5000](http://localhost:5000) to see your application.
 
 ### Database Setup
 

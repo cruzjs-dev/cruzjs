@@ -1,13 +1,18 @@
 import { cloudflareDevProxy } from '@react-router/dev/vite/cloudflare';
 import { reactRouter } from '@react-router/dev/vite';
+import { serverOnlyPlugin } from '@cruzjs/core/vite';
 import tailwindcss from '@tailwindcss/vite';
 import babel from 'vite-plugin-babel';
 import * as path from 'path';
 import { defineConfig } from 'vite-plus';
 
+// Node-only packages that must never enter the client/browser bundle.
 const externalPackages = [
   'reflect-metadata',
   'better-sqlite3',
+  'ioredis',
+  'pg',
+  'pg-native',
   'drizzle-orm/better-sqlite3',
   'drizzle-orm/bun-sqlite',
   'drizzle-orm/libsql',
@@ -28,6 +33,9 @@ export default defineConfig(({ command }) => {
       },
     },
     plugins: [
+      // Strips server-only modules from the client graph so Node DB drivers
+      // (ioredis, better-sqlite3, pg, ...) never break the production build.
+      serverOnlyPlugin(),
       babel({
         filter: /\.[jt]sx?$/,
         include: [/\/src\//, /@cruzjs\//],

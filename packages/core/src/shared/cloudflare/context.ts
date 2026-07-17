@@ -42,7 +42,11 @@ export class CloudflareContext {
    * so that caching works during development.
    */
   static async init(loadContext: unknown): Promise<void> {
-    const env = (loadContext as any)?.cloudflare?.env as CloudflareEnv | undefined;
+    // Prefer the nested `cloudflare.env` shape (CF Pages/Workers dev proxy), but
+    // fall back to a flat `context.env` so runtimes/adapters that supply only
+    // the flat shape still get their bindings bridged.
+    const ctx = loadContext as { cloudflare?: { env?: CloudflareEnv }; env?: CloudflareEnv } | undefined;
+    const env = (ctx?.cloudflare?.env ?? ctx?.env) as CloudflareEnv | undefined;
 
     if (env) {
       this.env = env;

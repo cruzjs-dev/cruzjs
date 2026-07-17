@@ -11,9 +11,9 @@ CruzJS ships with auth pre-configured: signup, email verification, login, and pa
 
 With `cruz dev` running:
 
-1. Go to `http://localhost:5173/auth/register`
+1. Go to `http://localhost:5000/auth/register`
 2. Sign up with any email (local dev catches all emails at `/dev/emails`)
-3. Visit `http://localhost:5173/dev/emails` to see the verification email
+3. Visit `http://localhost:5000/dev/emails` to see the verification email
 4. Click the link — you're in
 
 Password reset flows through the same email route.

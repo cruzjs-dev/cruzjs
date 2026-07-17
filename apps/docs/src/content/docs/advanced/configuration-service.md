@@ -171,7 +171,7 @@ Set environment variables in your `.dev.vars` file (Cloudflare's local env file)
 
 ```ini
 # .dev.vars
-APP_URL=http://localhost:5173
+APP_URL=http://localhost:5000
 EMAIL_PROVIDER=console
 STORAGE_DRIVER=local
 STRIPE_SECRET_KEY=sk_test_...

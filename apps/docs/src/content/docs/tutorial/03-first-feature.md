@@ -98,9 +98,11 @@ export class TasksRouter {
 @Module({
   providers: [
     { provide: TASKS_SERVICE, useClass: TasksService },
-    { provide: TASKS_ROUTER, useClass: TasksRouter },
+    TasksRouter,
   ],
-  routers: [TASKS_ROUTER],
+  trpcRouters: {
+    tasks: TasksRouter,
+  },
 })
 export class TasksModule {}
 ```

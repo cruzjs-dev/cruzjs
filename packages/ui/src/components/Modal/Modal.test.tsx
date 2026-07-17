@@ -110,6 +110,20 @@ describe('Modal', () => {
     expect(screen.queryByLabelText('Close')).not.toBeInTheDocument();
   });
 
+  it('portals to document.body so inert trapping does not block clicks', () => {
+    render(
+      <div data-testid="host">
+        <Modal open onClose={() => {}}>
+          <button type="button">Inside modal</button>
+        </Modal>
+      </div>,
+    );
+    const host = screen.getByTestId('host');
+    expect(host.querySelector('[data-modal-root]')).toBeNull();
+    expect(document.body.querySelector('[data-modal-root]')).not.toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'Inside modal' }));
+  });
+
   it('calls onClose when close button clicked', () => {
     const onClose = vi.fn();
     render(

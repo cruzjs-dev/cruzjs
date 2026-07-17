@@ -45,7 +45,17 @@ export default function App() {
       createQueryClient={createQueryClient}
       theme={theme}
     >
+      {/*
+        AuthProvider gates the app. By default every route except `/`, `/auth/*`
+        and `/api/*` requires a signed-in user. To expose extra public pages
+        (marketing, docs, etc.) without dropping protection everywhere, pass
+        `publicPaths`, e.g. <AuthProvider publicPaths={['/about', '/pricing']}>.
+        For a fully public app use <AuthProvider requireAuth={false}>.
+        `loginPath` overrides where anonymous users are sent.
+      */}
       <AuthProvider>
+        {/* Toasts default to top-right; pass position="top-center" (or another
+            corner) for mobile-first layouts. */}
         <ToastProvider>
           <Outlet />
         </ToastProvider>

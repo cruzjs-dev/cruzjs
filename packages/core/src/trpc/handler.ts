@@ -5,6 +5,7 @@ import { RouteRegistry } from '../framework/route-registry';
 import { getOrBuildContainer } from '../framework/application.server';
 import { getRegisteredModules } from '../framework/module-registry';
 import { CloudflareContext } from '../shared/cloudflare/context';
+import { runWithWaitUntil, getWaitUntilFromContext } from '../shared/background/background';
 import type { CruzContainer } from '../di';
 import type { ModuleClass } from '../di';
 
@@ -47,23 +48,30 @@ export const handleTRPCRequest = async (
   // Mutable headers — procedures append Set-Cookie etc; piped back via responseMeta.
   const resHeaders = new Headers();
 
-  return fetchRequestHandler({
-    endpoint: '/api/trpc',
-    req: request,
-    router: appRouter,
-    createContext: () => createContext(request, params, container, resHeaders),
-    responseMeta: () => {
-      const headers: Record<string, string> = {};
-      resHeaders.forEach((value, key) => {
-        headers[key] = value;
-      });
-      return { headers };
-    },
-    onError: ({ path, error }) => {
-      console.error(
-        `tRPC failed on ${path ?? '<no-path>'}: ${error.message}`,
-        error.stack
-      );
-    },
-  });
+  // Capture the runtime's waitUntil so procedures can hand off background work
+  // (Discord/Telegram notifies, etc.) via `runInBackground()` without it being
+  // cancelled when the response returns. See shared/background/background.ts.
+  const waitUntil = getWaitUntilFromContext(loadContext);
+
+  return runWithWaitUntil(waitUntil, () =>
+    fetchRequestHandler({
+      endpoint: '/api/trpc',
+      req: request,
+      router: appRouter,
+      createContext: () => createContext(request, params, container, resHeaders),
+      responseMeta: () => {
+        const headers: Record<string, string> = {};
+        resHeaders.forEach((value, key) => {
+          headers[key] = value;
+        });
+        return { headers };
+      },
+      onError: ({ path, error }) => {
+        console.error(
+          `tRPC failed on ${path ?? '<no-path>'}: ${error.message}`,
+          error.stack
+        );
+      },
+    })
+  );
 };

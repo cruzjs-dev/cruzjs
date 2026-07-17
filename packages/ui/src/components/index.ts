@@ -16,6 +16,7 @@ export * from './Badge';
 export * from './Banner';
 export * from './BlogCards';
 export * from './Burger';
+export * from './Button';
 export * from './Card';
 export * from './CareerCards';
 export * from './Changelog';

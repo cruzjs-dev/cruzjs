@@ -14,11 +14,20 @@ Read `.claude/kb/` before making changes:
 | `04-DATABASE.md` | Drizzle ORM + D1/SQLite schema and queries |
 | `05-TRPC.md` | tRPC routers, procedures, permissions |
 | `06-AUTH.md` | Auth, sessions, roles, org context |
-| `07-UI.md` | React + Tailwind + Chakra, route files |
+| `07-UI.md` | React + Tailwind + `@cruzjs/ui` components, route files |
 | `08-DATA-OWNERSHIP.md` | User-specific vs org-scoped data (CRITICAL) |
 | `09-EVENTS-JOBS.md` | Domain events, background jobs, queues |
 | `10-PROVIDERS.md` | Feature modules, @Module, extensibility |
 | `11-CLOUDFLARE.md` | CloudflareContext, D1/KV/R2, Workers |
+
+## Bootstrap (how this app boots)
+
+- `src/entry.server.tsx` — SSR entry; imports `./app.server` then re-exports the framework request handler.
+- `src/app.server.ts` — calls `DrizzleService.setSchema(schema)` and `registerModules([StartModule, ...])`. **Register new feature modules here.**
+- `src/routes.ts` — `createCruzRoutes({ ... })`; add feature/page routes and override framework routes here.
+- `src/routes/api/trpc.$.ts` — `createTRPCLoaderHandler()` / `createTRPCActionHandler()`; env-bridging and `waitUntil` are handled by the framework.
+
+There is no `server.cloudflare.ts` and you do not call `createCruzApp()` in this app — that is the adapter-based bootstrap for other runtimes.
 
 ## Key Rules
 
@@ -26,10 +35,13 @@ Read `.claude/kb/` before making changes:
 2. **Use DI decorators** -- `@Injectable()`, `@Inject(TOKEN)`, `@Module()`
 3. **Routes inside features** -- `src/features/<name>/routes/`
 4. **Always filter by ownership** -- every query must include `userId` or `orgId` in WHERE
-5. **Never instantiate services** -- use `getAppContainer().resolve(Service)`
-6. **SQLite types** -- D1 is SQLite; use `sqliteTable`, `text`, `integer`
+5. **Never instantiate services** -- in a tRPC procedure use `ctx.container.get(Service)`; elsewhere `const c = await getAppContainer(); c.get(Service)`
+6. **UI** -- build with Tailwind + `@cruzjs/ui` components; do not author pages in raw Chakra
+7. **SQLite types** -- D1 is SQLite; use `sqliteTable`, `text`, `integer`
 
 ## Import Aliases
+
+The `@` alias maps to `src/` (see `vite.config.ts`).
 
 ```typescript
 // Framework packages (from node_modules)
@@ -38,12 +50,13 @@ import { getAppContainer } from '@cruzjs/core';
 import { router, protectedProcedure, orgProcedure } from '@cruzjs/core/trpc/context';
 import { DRIZZLE, type DrizzleDatabase } from '@cruzjs/core/shared/database/drizzle.service';
 import { CloudflareContext } from '@cruzjs/core/shared/cloudflare/context';
+import { runInBackground } from '@cruzjs/core/background';
 import { requirePermission } from '@cruzjs/saas/orgs/auth.utils';
 
-// Local project (from src/)
-import { trpc } from '~/trpc/client';
-import * as schema from '~/database/schema';
-import { MyService } from '~/features/my-feature';
+// Local project (from src/) — the '@' alias points at src/
+import { trpc } from '@/trpc/client';
+import * as schema from '@/database/schema';
+import { MyService } from '@/features/my-feature';
 ```
 
 ## CLI Commands

@@ -48,7 +48,21 @@ const AuthContext = createContext<AuthState | null>(null);
 
 type AuthProviderProps = {
   children: ReactNode;
+  /**
+   * When true (default), unauthenticated users on a non-public route are
+   * redirected to `loginPath`. Set false to make the entire app public.
+   */
   requireAuth?: boolean;
+  /**
+   * Extra path prefixes that are public even when `requireAuth` is true.
+   * Merged with the built-in defaults (`/auth/`, `/api/`, and `/`). Use this
+   * to keep an app auth-gated while exposing marketing/public pages
+   * (e.g. `publicPaths={['/about', '/pricing', '/blog']}`), instead of the
+   * all-or-nothing `requireAuth={false}`.
+   */
+  publicPaths?: string[];
+  /** Where to send unauthenticated users. Defaults to `/auth/login`. */
+  loginPath?: string;
 };
 
 const PUBLIC_PATH_PREFIXES = ['/auth/', '/api/'];
@@ -56,6 +70,8 @@ const PUBLIC_PATH_PREFIXES = ['/auth/', '/api/'];
 export const AuthProvider: React.FC<AuthProviderProps> = ({
   children,
   requireAuth = true,
+  publicPaths = [],
+  loginPath = '/auth/login',
 }) => {
   const trpc = getTRPC() as any;
   const navigate = useNavigate();
@@ -63,8 +79,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
   const { data, isLoading, refetch } = trpc.auth.session.useQuery();
   const [redirected, setRedirected] = useState(false);
 
-  const isPublicRoute = PUBLIC_PATH_PREFIXES.some(p => location.pathname.startsWith(p))
-    || location.pathname === '/';
+  const isPublicRoute =
+    location.pathname === '/' ||
+    [...PUBLIC_PATH_PREFIXES, ...publicPaths].some((p) => location.pathname.startsWith(p));
 
   const refresh = useCallback(() => {
     refetch();
@@ -96,9 +113,26 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
   useEffect(() => {
     if (requireAuth && !isPublicRoute && !isLoading && !data?.user && !redirected) {
       setRedirected(true);
-      navigate('/auth/login');
+      // Preserve the attempted path so login can send the user back (mirrors
+      // the server-side redirect helper in auth/utils.server.ts).
+      const target = `${location.pathname}${location.search}`;
+      const to =
+        target && target !== '/'
+          ? `${loginPath}?redirect=${encodeURIComponent(target)}`
+          : loginPath;
+      navigate(to);
     }
-  }, [requireAuth, isPublicRoute, isLoading, data?.user, redirected, navigate]);
+  }, [
+    requireAuth,
+    isPublicRoute,
+    isLoading,
+    data?.user,
+    redirected,
+    navigate,
+    loginPath,
+    location.pathname,
+    location.search,
+  ]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

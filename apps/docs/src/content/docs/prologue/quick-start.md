@@ -68,7 +68,7 @@ This starts the local development server with:
 - Local KV and R2 emulation via Wrangler
 - tRPC endpoint at `/api/trpc/*`
 
-Visit [http://localhost:5173](http://localhost:5173) to see your app.
+Visit [http://localhost:5000](http://localhost:5000) to see your app.
 
 ### Database Setup
 

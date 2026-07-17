@@ -18,7 +18,7 @@ export default defineConfig({
   fullyParallel: true,
   retries: process.env.CI ? 2 : 0,
   use: {
-    baseURL: 'http://localhost:5173',
+    baseURL: 'http://localhost:5000',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
   },
@@ -27,7 +27,7 @@ export default defineConfig({
   ],
   webServer: {
     command: 'cruz dev',
-    port: 5173,
+    port: 5000,
     reuseExistingServer: !process.env.CI,
   },
 });

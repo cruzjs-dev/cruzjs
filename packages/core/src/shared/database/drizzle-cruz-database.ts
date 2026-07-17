@@ -20,6 +20,8 @@ import type {
   CruzFromBuilder,
   CruzInsertBuilder,
   CruzInsertResultBuilder,
+  CruzOnConflictDoNothingConfig,
+  CruzOnConflictDoUpdateConfig,
   CruzResultBuilder,
   CruzSelectBuilder,
   CruzSelectFields,
@@ -56,6 +58,8 @@ interface DrizzleSelectChainInternal {
 
 interface DrizzleInsertResultChainInternal extends PromiseLike<unknown> {
   returning(fields?: unknown): PromiseLike<unknown[]>;
+  onConflictDoNothing(config?: unknown): DrizzleInsertResultChainInternal;
+  onConflictDoUpdate(config: unknown): DrizzleInsertResultChainInternal;
 }
 
 interface DrizzleInsertChainInternal {
@@ -201,6 +205,16 @@ class CruzInsertResultBuilderImpl<TResult> extends VoidResultBase implements Cru
   constructor(private readonly chain: DrizzleInsertResultChainInternal) {
     super();
     this.voidChain = chain;
+  }
+
+  onConflictDoNothing(config?: CruzOnConflictDoNothingConfig): CruzInsertResultBuilder<TResult> {
+    return new CruzInsertResultBuilderImpl<TResult>(this.chain.onConflictDoNothing(config));
+  }
+
+  onConflictDoUpdate(
+    config: CruzOnConflictDoUpdateConfig<TResult>,
+  ): CruzInsertResultBuilder<TResult> {
+    return new CruzInsertResultBuilderImpl<TResult>(this.chain.onConflictDoUpdate(config));
   }
 
   returning(): PromiseLike<TResult[]>;

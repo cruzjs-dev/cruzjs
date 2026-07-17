@@ -22,7 +22,7 @@ cd taskboard
 cruz dev
 ```
 
-Open `http://localhost:5173`. You'll see the CruzJS welcome screen — a signup form backed by a real SQLite database running locally.
+Open `http://localhost:5000`. You'll see the CruzJS welcome screen — a signup form backed by a real SQLite database running locally.
 
 ## Generated structure
 

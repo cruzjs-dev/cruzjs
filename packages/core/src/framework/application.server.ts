@@ -16,6 +16,7 @@ import { ApiModule } from '../api/api.module';
 import { ApiRouterDispatcher } from '../api/api-router.dispatcher';
 import { isApiRouter } from '../api/api.decorators';
 import { registerLocalQueueConsumers } from './local-queue-registry';
+import { getRegisteredModules } from './module-registry';
 import { RouteRegistry } from './route-registry';
 import type { RuntimeAdapter } from '../runtime';
 import { SSE_BACKEND, BROADCAST_ADAPTER } from '../broadcasting';
@@ -75,6 +76,25 @@ export async function getOrBuildContainer(
 
   const container = await containerBuildPromise;
   return { container, freshlyBuilt: true };
+}
+
+/**
+ * Get the application's DI container.
+ *
+ * Resolves the globally-registered modules (set via `registerModules([...])` in
+ * `app.server.ts`, or `createCruzApp({ modules })`) and returns the shared,
+ * cached container. This is the convenience entry point for functional route
+ * loaders/actions and other places that need a service outside a tRPC procedure:
+ *
+ *   const container = await getAppContainer();
+ *   const notes = container.get(NotesService); // or container.resolve(NotesService)
+ *
+ * Inside a tRPC procedure, prefer `ctx.container` — it is the same container and
+ * needs no await.
+ */
+export async function getAppContainer(): Promise<CruzContainer> {
+  const { container } = await getOrBuildContainer(getRegisteredModules());
+  return container;
 }
 
 /**

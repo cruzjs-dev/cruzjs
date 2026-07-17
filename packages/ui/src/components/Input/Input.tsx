@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useId } from 'react';
 
 export type InputSize = 'sm' | 'md' | 'lg';
 
@@ -37,7 +37,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   ref,
 ) {
   const s = sizeStyles[size];
-  const inputId = id || (label ? `input-${Math.random().toString(36).slice(2, 9)}` : undefined);
+  // Stable id across SSR and hydration (Math.random() caused hydration mismatches).
+  const generatedId = useId();
+  const inputId = id || (label ? generatedId : undefined);
   const hasError = !!error;
 
   return (

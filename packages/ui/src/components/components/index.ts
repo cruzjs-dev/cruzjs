@@ -11,8 +11,8 @@ export { SearchFilterBar } from './SearchFilterBar';
 export { BulkActionsBar } from './BulkActionsBar';
 export { ThresholdApprovalModal } from './ThresholdApprovalModal';
 
-// Form Controls
-export { Input, Select, FilterBar } from './FormControls';
+// Form Controls — Input/Select live in dedicated modules; only export FilterBar here.
+export { FilterBar } from './FormControls';
 export { FilterPill } from './FilterPill';
 export { InlineSelect } from './InlineSelect';
 
@@ -27,7 +27,7 @@ export type { Tab } from './TabNavigation';
 export type { FilterConfig, FilterOption, QuickStat, SearchFilterBarProps } from './SearchFilterBar';
 export type { BulkAction, BulkActionsBarProps } from './BulkActionsBar';
 export type { ThresholdApprovalModalProps } from './ThresholdApprovalModal';
-export type { InputProps, SelectProps, SelectOption, FilterBarProps } from './FormControls';
+export type { FilterBarProps } from './FormControls';
 export type { FilterOption as FilterPillOption } from './FilterPill';
 export type { InlineSelectOption } from './InlineSelect';
 

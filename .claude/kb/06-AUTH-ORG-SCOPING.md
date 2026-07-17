@@ -226,7 +226,7 @@ import {
   getStoredSessionToken,
   storeSessionToken,
   clearSessionToken,
-} from '@cruzjs/core/auth/utils.client';
+} from '@cruzjs/core/auth/auth-client';
 
 // After login
 storeSessionToken(loginResponse.session.token);

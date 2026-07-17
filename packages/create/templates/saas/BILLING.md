@@ -19,7 +19,7 @@ This project includes Stripe billing via `@cruzjs/saas`.
    cruz dev
    ```
 
-4. **Test the upgrade flow** at `http://localhost:5173/billing`:
+4. **Test the upgrade flow** at `http://localhost:5000/billing`:
    - Click "Upgrade to Pro"
    - Use test card: `4242 4242 4242 4242`, expiry `12/34`, CVC `123`
    - You'll be redirected to `/billing/success`
@@ -52,5 +52,5 @@ if (currentCount >= limit) {
 The Stripe webhook is automatically handled by `BillingModule`. It listens at `/api/webhooks/stripe` and updates subscription status in D1.
 
 In the Stripe dashboard, set your webhook endpoint to:
-- Local: Use `stripe listen --forward-to localhost:5173/api/webhooks/stripe`
+- Local: Use `stripe listen --forward-to localhost:5000/api/webhooks/stripe`
 - Production: `https://your-app.pages.dev/api/webhooks/stripe`

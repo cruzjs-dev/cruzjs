@@ -489,7 +489,7 @@ export default [
 
 ## Step 9: Test It
 
-Start the dev server and visit `http://localhost:5173/notes`:
+Start the dev server and visit `http://localhost:5000/notes`:
 
 ```bash
 cruz dev

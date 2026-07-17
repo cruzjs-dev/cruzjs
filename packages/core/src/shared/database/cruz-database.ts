@@ -114,11 +114,37 @@ export interface CruzCustomSelectBuilder<TFields extends CruzSelectFields> {
   from(table: Table<TableConfig>): CruzFromBuilder<InferCruzSelectResult<TFields>>;
 }
 
+/** Conflict-target config for `onConflictDoNothing`. */
+export interface CruzOnConflictDoNothingConfig {
+  target?: Column | Column[];
+  where?: SQL;
+}
+
+/**
+ * Conflict-target + update config for `onConflictDoUpdate` (upsert).
+ * Signature matches Drizzle's SQLite/PostgreSQL upsert.
+ */
+export interface CruzOnConflictDoUpdateConfig<TResult> {
+  target: Column | Column[];
+  set: CruzUpdateData<TResult>;
+  where?: SQL;
+  targetWhere?: SQL;
+  setWhere?: SQL;
+}
+
 /**
  * Awaitable result after .values().
  * .returning() available on SQLite and PostgreSQL; not supported on MySQL.
+ * .onConflictDoNothing() / .onConflictDoUpdate() available on SQLite (D1) and
+ * PostgreSQL (MySQL uses onDuplicateKeyUpdate — not exposed here).
  */
 export interface CruzInsertResultBuilder<TResult> extends CruzResultBuilder<void> {
+  /** Skip the insert when a conflict occurs on the target column(s). */
+  onConflictDoNothing(config?: CruzOnConflictDoNothingConfig): CruzInsertResultBuilder<TResult>;
+  /** Upsert: update the conflicting row(s) with `set` when a conflict occurs. */
+  onConflictDoUpdate(
+    config: CruzOnConflictDoUpdateConfig<TResult>,
+  ): CruzInsertResultBuilder<TResult>;
   /** Return the full inserted row(s). */
   returning(): PromiseLike<TResult[]>;
   /** Return specific fields from the inserted row(s), inferred from the fields map. */

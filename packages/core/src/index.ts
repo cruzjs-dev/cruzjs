@@ -49,9 +49,16 @@ export { IdentityCreatedEvent } from './auth/events/identity-created.event';
 export {
   buildContainerWithModules,
   buildContainerWithProviders,
+  getAppContainer,
   getOrBuildContainer,
   resetContainerCache,
 } from './framework/application.server';
+// Background tasks (waitUntil bridge)
+export {
+  runInBackground,
+  runWithWaitUntil,
+  getWaitUntilFromContext,
+} from './shared/background/background';
 export { registerModules, getRegisteredModules } from './framework/module-registry';
 export { RouteRegistry } from './framework/route-registry';
 export { createCruzApp } from './framework/create-cruz-app';

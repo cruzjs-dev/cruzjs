@@ -148,6 +148,7 @@ function generatePackageJson(options: Options): string {
       'postcss': '^8.5.6',
       'tailwindcss': '^4.1.17',
       'typescript': '^5.9.3',
+      'vite-node': '^3.2.4',
       'vite-plus': 'latest',
       'vite-plugin-babel': '^1.5.1',
       'wrangler': '^3.99.0',
@@ -158,14 +159,37 @@ function generatePackageJson(options: Options): string {
 }
 
 function generateAppServer(options: Options): string {
+  // NOTE: this file is imported by entry.server.tsx before any request handling.
+  // It MUST call DrizzleService.setSchema() and registerModules() or the app
+  // boots with no schema and no routers (every tRPC call 500s).
+  const moduleImports: string[] = [];
+  const moduleNames: string[] = [];
+
+  if (options.withStart) {
+    moduleImports.push(`import { StartModule } from '@cruzjs/start/start.module';`);
+    moduleNames.push('StartModule');
+  }
+
   const lines: string[] = [
     `/**`,
     ` * App Server`,
     ` *`,
-    ` * Configures database schema and defines application modules.`,
+    ` * Configures the database schema and registers application modules.`,
     ` * Imported by entry.server.tsx before any request handling.`,
     ` */`,
     `import 'reflect-metadata';`,
+    ``,
+    `import { DrizzleService } from '@cruzjs/core/shared/database/drizzle.service';`,
+    `import { registerModules } from '@cruzjs/core/framework/module-registry';`,
+    ...moduleImports,
+    `import * as schema from './database/schema';`,
+    ``,
+    `DrizzleService.setSchema(schema);`,
+    ``,
+    `registerModules([`,
+    ...moduleNames.map((n) => `  ${n},`),
+    `  // Add your feature modules here`,
+    `]);`,
   ];
 
   return lines.join('\n') + '\n';

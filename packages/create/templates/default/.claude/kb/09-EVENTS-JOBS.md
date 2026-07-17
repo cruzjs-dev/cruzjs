@@ -47,7 +47,7 @@ In `@Module`:
 ```typescript
 @Module({
   providers: [NotesService],
-  routers: { notes: notesRouter },
+  trpcRouters: { notes: notesRouter },
   events: [
     { event: NoteCreatedEvent, listener: onNoteCreated },
     { event: NoteCreatedEvent, listener: sendNoteNotification },
@@ -89,6 +89,14 @@ From `@cruzjs/saas`:
 - `InvitationCreatedEvent`, `InvitationAcceptedEvent`
 
 ## Background Jobs
+
+For durable, retryable work use the job system below. For lightweight fire-and-forget work inside a request (e.g. sending a notification) that doesn't need persistence or retries, prefer `runInBackground` — it lets the promise finish after the response returns:
+
+```typescript
+import { runInBackground } from '@cruzjs/core/background';
+
+runInBackground(notify(userId)); // survives after the response; never awaited on the request path
+```
 
 ### Create Job Handler
 
@@ -133,10 +141,10 @@ export class MyModule {}
 ### Create Jobs
 
 ```typescript
-import { JobService, JobPriority } from '@cruzjs/core';
+import { JobService, JobPriority } from '@cruzjs/core/jobs';
 
 const container = await getAppContainer();
-const jobService = container.resolve(JobService);
+const jobService = container.get(JobService);
 
 await jobService.createJob({
   type: 'my-job',

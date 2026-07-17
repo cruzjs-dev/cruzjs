@@ -14,7 +14,7 @@ Starts the local development server in the background. The server provides hot m
 cruz dev
 
 # The server runs in the background. Visit:
-# http://localhost:5173
+# http://localhost:5000
 ```
 
 The dev server runs as a background process, so your terminal is free for other commands. Manage it with subcommands:

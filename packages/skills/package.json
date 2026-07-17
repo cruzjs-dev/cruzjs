@@ -1,6 +1,6 @@
 {
   "name": "@cruzjs/skills",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "type": "module",
   "description": "Claude Code commands, knowledge base, and agent personas for CruzJS development",
   "bin": {

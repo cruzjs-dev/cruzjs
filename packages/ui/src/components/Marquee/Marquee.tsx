@@ -55,7 +55,7 @@ export const Marquee = forwardRef<HTMLDivElement, MarqueeProps>(function Marquee
       <style>{keyframes}</style>
       <div
         className={[
-          'flex w-max',
+          'marquee-track flex w-max',
           pauseOnHover ? 'marquee-pause-on-hover' : '',
         ].filter(Boolean).join(' ')}
         style={{
@@ -80,7 +80,7 @@ export const Marquee = forwardRef<HTMLDivElement, MarqueeProps>(function Marquee
   animation-play-state: paused !important;
 }
 @media (prefers-reduced-motion: reduce) {
-  [data-testid="marquee-track"] {
+  .marquee-track {
     animation-play-state: paused !important;
   }
 }

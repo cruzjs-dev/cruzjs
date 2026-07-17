@@ -1,6 +1,6 @@
 {
   "name": "@cruzjs/core",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "type": "module",
   "main": "src/index.ts",
   "exports": {
@@ -23,6 +23,7 @@
     "./shared/encryption": "./src/shared/encryption/index.ts",
     "./shared/cloudflare": "./src/shared/cloudflare/index.ts",
     "./shared/config": "./src/shared/config/index.ts",
+    "./background": "./src/shared/background/background.ts",
     "./auth/events": "./src/auth/events/index.ts",
     "./auth/pages": "./src/auth/pages/index.ts",
     "./auth/components": "./src/auth/components/index.ts",

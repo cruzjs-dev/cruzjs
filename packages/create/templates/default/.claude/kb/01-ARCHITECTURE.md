@@ -4,11 +4,11 @@
 
 ```
 src/
-├── entry.server.tsx        # SSR entry — initializes CloudflareContext per request
+├── entry.server.tsx        # SSR entry — imports app.server, re-exports framework handler
 ├── entry.client.tsx        # Client-side hydration
 ├── root.tsx                # Root React component with providers
-├── routes.ts               # React Router route config
-├── server.cloudflare.ts    # App bootstrap (createCruzApp)
+├── routes.ts               # React Router route config (createCruzRoutes)
+├── app.server.ts           # App bootstrap (setSchema + registerModules)
 ├── database/
 │   ├── schema.ts           # Central schema (re-exports packages + your tables)
 │   └── migrations/         # Generated Drizzle migrations
@@ -60,9 +60,9 @@ wrangler.toml                # Generated — do not edit manually
 ## Bootstrap Flow
 
 ```
-1. server.cloudflare.ts
-   └── createCruzApp({ schema, modules, adapter, pages })
-       ├── Set database schema
+1. src/app.server.ts
+   ├── DrizzleService.setSchema(schema)
+   └── registerModules([StartModule, ...your feature modules])
        ├── Create CruzContainer
        ├── Load Core modules (Auth, Email, Job, Upload, Shared)
        ├── Load Start modules (Org, Members, Permissions)
@@ -72,8 +72,10 @@ wrangler.toml                # Generated — do not edit manually
        ├── Register event listeners
        └── Run boot phase
 
-2. entry.server.tsx (per request)
-   └── CloudflareContext.init(loadContext)  # Extract D1/KV/R2 bindings
+2. src/entry.server.tsx
+   ├── import './app.server'   # runs the registration above
+   └── re-exports the framework request handler
+       # Cloudflare env→process.env bridging and waitUntil are handled automatically
 ```
 
 ## Request Flow
@@ -94,29 +96,37 @@ Every feature is self-contained. Routes live inside the feature, not in a global
 
 ```typescript
 // src/routes.ts — point to feature route files
-import { prefix, index, route } from '@react-router/dev/routes';
+import { type RouteConfig, route, index, layout, prefix } from '@react-router/dev/routes';
+import { createCruzRoutes } from '@cruzjs/core/routing';
+import { registerCruzStartRoutes } from '@cruzjs/start/routing';
 
-export default [
-  ...prefix('notes', [
-    index('features/notes/routes/index.tsx'),
-    route(':id', 'features/notes/routes/$id.tsx'),
-  ]),
-] satisfies RouteConfig;
+export default createCruzRoutes({
+  route, index, layout, prefix,
+  dir: import.meta.dirname,
+  framework: {
+    registrars: [registerCruzStartRoutes],
+  },
+  routes: [
+    index('routes/index.tsx'),
+    ...prefix('notes', [
+      index('features/notes/routes/index.tsx'),
+      route(':id', 'features/notes/routes/$id.tsx'),
+    ]),
+  ],
+}) satisfies RouteConfig;
 ```
 
-Register features in `server.cloudflare.ts`:
+Register features in `src/app.server.ts`:
 
 ```typescript
-import { createCruzApp } from '@cruzjs/core';
-import { CloudflareAdapter } from '@cruzjs/adapter-cloudflare';
-import { StartModule } from '@cruzjs/start';
+import 'reflect-metadata';
+import { DrizzleService } from '@cruzjs/core/shared/database/drizzle.service';
+import { registerModules } from '@cruzjs/core/framework/module-registry';
+import { StartModule } from '@cruzjs/start/start.module';
 import * as schema from './database/schema';
 import { NotesModule } from './features/notes';
 
-export default createCruzApp({
-  schema,
-  modules: [StartModule, NotesModule],
-  adapter: new CloudflareAdapter(),
-  pages: () => import('virtual:react-router/server-build'),
-});
+DrizzleService.setSchema(schema);
+
+registerModules([StartModule, NotesModule]);
 ```
