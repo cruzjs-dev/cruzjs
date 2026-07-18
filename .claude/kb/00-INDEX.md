@@ -112,6 +112,6 @@ cruz dev stop        # Stop dev server
 1. **Never use Prisma** - This codebase uses **Drizzle ORM only**
 2. **Always scope data** - Filter by `orgId` or `userId` (see `08-DATA-OWNERSHIP.md`)
 3. **Use DI containers** - Services must be `@injectable()` and registered
-4. **Extend via modules** - Use `@Module` and pass to `createCruzApp({ modules: [...] })`
+4. **Extend via modules** - Use `@Module` and register via `registerModules([...])` in `src/app.server.ts`
 5. **Routes use default exports** - All route files export default
 6. **Everything else uses named exports** - Services, components, types

@@ -10,11 +10,12 @@ CruzJS includes a task scheduler for running periodic jobs on a cron schedule. T
 Register the `SchedulerModule` in your application:
 
 ```typescript
+// src/app.server.ts
+import { registerModules } from '@cruzjs/core/framework/module-registry';
+import { StartModule } from '@cruzjs/start/start.module';
 import { SchedulerModule } from '@cruzjs/core/scheduler';
 
-export default createCruzApp({
-  modules: [SchedulerModule],
-});
+registerModules([StartModule, SchedulerModule]);
 ```
 
 ## Defining Scheduled Tasks
@@ -22,7 +23,6 @@ export default createCruzApp({
 Register cron tasks in `createCruzApp` using the `scheduled` option:
 
 ```typescript
-// server.cloudflare.ts
 export default createCruzApp({
   schema,
   modules: [SchedulerModule],

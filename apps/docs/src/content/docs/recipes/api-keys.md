@@ -296,7 +296,7 @@ Use in API routes:
 
 ```typescript
 // apps/web/src/routes/api/v1/projects.ts
-import { requireApiKeyPermission } from '~/features/api-keys/api-key.middleware';
+import { requireApiKeyPermission } from '@/features/api-keys/api-key.middleware';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const auth = await requireApiKeyPermission(request, 'projects:read');

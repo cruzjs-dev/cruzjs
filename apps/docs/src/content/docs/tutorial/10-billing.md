@@ -19,12 +19,10 @@ npm install @cruzjs/saas
 // apps/web/src/app.server.ts
 import { BillingModule } from '@cruzjs/saas';
 
-export default createCruzApp({
-  modules: [
-    BillingModule,
-    // ...
-  ],
-});
+registerModules([
+  BillingModule,
+  // ...
+]);
 ```
 
 ## Configure plans
@@ -80,15 +78,26 @@ async createProject(orgId: string, input: CreateProjectInput) {
 
 ## Add the billing UI
 
-The upgrade flow is pre-built in `@cruzjs/saas`. Add the billing routes to your app:
+The upgrade flow is pre-built in `@cruzjs/saas`. Register `BillingModule` in `app.server.ts`, then add the saas routes registrar in `routes.ts` so the billing pages are mounted:
 
 ```typescript
 // apps/web/src/app.server.ts
-import { BillingModule, BILLING_ROUTES } from '@cruzjs/saas';
+import { BillingModule } from '@cruzjs/saas';
 
-export default createCruzApp({
-  modules: [BillingModule],
-  routes: [...BILLING_ROUTES],
+registerModules([BillingModule]);
+```
+
+```typescript
+// apps/web/src/routes.ts
+import { registerCruzSaasRoutes } from '@cruzjs/saas/routing';
+
+export default createCruzRoutes({
+  route, index, layout, prefix,
+  dir: import.meta.dirname,
+  framework: { registrars: [registerCruzSaasRoutes] },
+  routes: [
+    // your app routes
+  ],
 });
 ```
 

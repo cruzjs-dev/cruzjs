@@ -10,11 +10,12 @@ CruzJS provides distributed rate limiting through the `RateLimitModule`. On Clou
 Register the `RateLimitModule` in your application:
 
 ```typescript
+// src/app.server.ts
+import { registerModules } from '@cruzjs/core/framework/module-registry';
+import { StartModule } from '@cruzjs/start/start.module';
 import { RateLimitModule } from '@cruzjs/core/rate-limiting';
 
-export default createCruzApp({
-  modules: [RateLimitModule],
-});
+registerModules([StartModule, RateLimitModule]);
 ```
 
 ## RateLimitAdapter Interface

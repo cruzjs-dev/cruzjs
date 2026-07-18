@@ -304,21 +304,19 @@ import { projectRouter } from './project.router';
 export class ProjectModule {}
 ```
 
-Then register the module in `createCruzApp()`:
+Then register the module in `registerModules()`:
 
 ```ts
-// server.cloudflare.ts
-import { createCruzApp } from '@cruzjs/core';
-import { CloudflareAdapter } from '@cruzjs/adapter-cloudflare';
+// src/app.server.ts
+import 'reflect-metadata';
+import { DrizzleService } from '@cruzjs/core/shared/database/drizzle.service';
+import { registerModules } from '@cruzjs/core/framework/module-registry';
+import { StartModule } from '@cruzjs/start/start.module';
 import * as schema from './database/schema';
 import { ProjectModule } from './features/project';
 
-export default createCruzApp({
-  schema,
-  modules: [ProjectModule],
-  adapter: new CloudflareAdapter(),
-  pages: () => import('virtual:react-router/server-build'),
-});
+DrizzleService.setSchema(schema);
+registerModules([StartModule, ProjectModule]);
 ```
 
 ## Service class conventions

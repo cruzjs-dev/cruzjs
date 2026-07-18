@@ -10,11 +10,11 @@ CruzJS supports social authentication via the `SocialAuthModule`, which is inclu
 The `SocialAuthModule` is included in `StartModule`, so no additional registration is needed if you use `StartModule`:
 
 ```typescript
+// src/app.server.ts
+import { registerModules } from '@cruzjs/core/framework/module-registry';
 import { StartModule } from '@cruzjs/start/start.module';
 
-export default createCruzApp({
-  modules: [StartModule],
-});
+registerModules([StartModule]);
 ```
 
 ## Supported Providers

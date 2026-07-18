@@ -122,8 +122,7 @@ For simpler cases or backward compatibility, functional routers still work:
 // features/my-feature/my-feature.trpc.ts
 export const myFeatureTrpc = router({
   list: orgProcedure.query(async ({ ctx }) => {
-    const container = await getAppContainer();
-    const service = container.get<MyFeatureService>(MyFeatureService);
+    const service = ctx.container.get(MyFeatureService);
     return service.list(ctx.org.orgId);
   }),
 });
@@ -140,7 +139,7 @@ export class MyFeatureModule {}
 
 ## Registering Routers
 
-Register routers in `@Module({ trpcRouters: { ... } })` and pass modules to `createCruzApp({ modules: [...] })`.
+Register routers in `@Module({ trpcRouters: { ... } })` and register modules via `registerModules([...])` in `src/app.server.ts`.
 
 ## User-Scoped Router
 

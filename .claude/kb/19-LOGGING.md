@@ -173,16 +173,18 @@ LOG_REDACT_PATHS=apiKey,context.privateKey,payload.stripeToken
 `LoggingModule.forRoot()` returns a configured module class that registers a `LOGGING_CONFIG` provider in the DI container — no `globalThis` mutation.
 
 ```typescript
+// src/app.server.ts
+import { registerModules } from '@cruzjs/core/framework/module-registry';
 import { LoggingModule } from '@cruzjs/core';
+import { StartModule } from '@cruzjs/start/start.module';
 
-export default createCruzApp({
-  modules: [
-    LoggingModule.forRoot({
-      redactPaths: ['apiKey', 'context.internalToken'],
-      transport: { target: 'pino-loki', options: { host: 'http://loki:3100' } },
-    }),
-  ],
-});
+registerModules([
+  StartModule,
+  LoggingModule.forRoot({
+    redactPaths: ['apiKey', 'context.internalToken'],
+    transport: { target: 'pino-loki', options: { host: 'http://loki:3100' } },
+  }),
+]);
 ```
 
 ## Environment Variables

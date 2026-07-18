@@ -22,7 +22,7 @@ The `cruz new` command scaffolds application code and standalone Cloudflare Work
 
 ## Auto-Wire (`--wire`)
 
-The `--wire` flag on `new feature` and `new crud` automatically registers the module in `server.cloudflare.ts` and exports the schema from `database/schema.ts`. Use it to go from zero to running migration in a single command:
+The `--wire` flag on `new feature` and `new crud` automatically registers the module in `src/app.server.ts` and exports the schema from `database/schema.ts`. Use it to go from zero to running migration in a single command:
 
 ```bash
 # Create + register + export in one step
@@ -44,7 +44,7 @@ cruz new feature <name> [--scope org|user|global] [--crud] [--wire]
 |------|---------|-------------|
 | `--scope` | `org` | Data ownership: `org` (org-scoped), `user` (user-specific), `global` (no owner) |
 | `--crud` | off | Use `createCrud()` helper instead of separate service + tRPC files |
-| `--wire` | off | Auto-register in `server.cloudflare.ts` and `database/schema.ts` |
+| `--wire` | off | Auto-register in `src/app.server.ts` and `database/schema.ts` |
 
 ### Examples
 
@@ -141,14 +141,12 @@ cruz db generate && cruz db migrate
 
 **Without `--wire`**, do these manually:
 
-1. Register the module in your `server.cloudflare.ts`:
+1. Register the module in your `src/app.server.ts`:
 
 ```typescript
 import { TagsModule } from './features/tags';
 
-export default createCruzApp({
-  modules: [..., TagsModule],
-});
+registerModules([...existingModules, TagsModule]);
 ```
 
 2. Export the schema in `database/schema.ts`:

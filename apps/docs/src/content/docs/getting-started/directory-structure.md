@@ -14,7 +14,7 @@ my-app/
 │   ├── entry.client.tsx        # Client-side hydration entry
 │   ├── root.tsx                # Root React component with providers
 │   ├── routes.ts               # React Router route config
-│   ├── server.cloudflare.ts     # App bootstrap (createCruzApp)
+│   ├── app.server.ts           # App bootstrap (registerModules + schema)
 │   │
 │   ├── database/
 │   │   ├── schema.ts           # Central schema (re-exports from packages + your tables)
@@ -57,13 +57,13 @@ my-app/
 
 Defines your app name, Cloudflare bindings (D1, KV, R2, AI), shared variables, and per-environment settings. The CLI reads this to generate `wrangler.toml` and provision infrastructure.
 
-### `src/server.cloudflare.ts`
+### `src/app.server.ts`
 
-The server entry point that bootstraps the application via `createCruzApp()`. Sets the database schema, registers modules, configures the runtime adapter, and exports the server handler.
+Bootstraps the application: sets the database schema with `DrizzleService.setSchema(schema)` and registers your modules with `registerModules([...])`. Imported by `entry.server.tsx` before any request is handled.
 
 ### `src/entry.server.tsx`
 
-The SSR entry point for every request. Initializes `CloudflareContext` from the React Router load context (extracting D1, KV, R2 bindings), then renders the app to a `ReadableStream`.
+The actual entry point for every request. Imports `./app.server` (so schema and modules are registered), then re-exports the framework `handleRequest`, which initializes `CloudflareContext` from the React Router load context (extracting D1, KV, R2 bindings) and renders the app to a `ReadableStream`.
 
 ### `src/database/schema.ts`
 
@@ -93,7 +93,7 @@ Each feature in `src/features/` is a self-contained module. Routes live **inside
 | `routes/` | React Router route components for this feature |
 | `events/` | Domain events and listeners (optional) |
 
-Features are registered by adding their module to the `modules` array in `createCruzApp()`.
+Features are registered by adding their module to the `registerModules([...])` array in `src/app.server.ts`.
 
 ## `@cruzjs/*` Packages
 
@@ -128,7 +128,7 @@ Your `package.json` lists them as regular dependencies:
 - `ConfigService` -- typed environment variable access
 - `@Injectable()`, `@Inject()`, `@Module()` -- dependency injection decorators
 - `router`, `publicProcedure`, `protectedProcedure`, `orgProcedure` -- tRPC building blocks
-- `getAppContainer()` -- resolve services from the DI container in routers
+- `getAppContainer()` -- resolve services from the DI container outside a request (jobs, scripts); inside a tRPC procedure use `ctx.container.get(Service)`
 
 ### Key exports from `@cruzjs/saas`
 
@@ -183,11 +183,11 @@ import { orgProcedure } from '@cruzjs/core/trpc/context';
 import { requirePermission } from '@cruzjs/start/orgs/auth.utils';
 
 // Local project imports (from src/)
-import { trpc } from '~/trpc/client';
-import * as schema from '~/database/schema';
+import { trpc } from '@/trpc/client';
+import * as schema from '@/database/schema';
 ```
 
-The `~` (or `@/`) alias maps to your project's `src/` directory. The `@cruzjs/<package>` imports resolve to npm packages in `node_modules`.
+The `@` alias maps to your project's `src/` directory. The `@cruzjs/<package>` imports resolve to npm packages in `node_modules`.
 
 ## Next Steps
 

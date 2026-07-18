@@ -27,7 +27,7 @@ my-app/
 │   ├── entry.client.tsx        # Client hydration
 │   ├── root.tsx                # Root React component
 │   ├── routes.ts               # React Router route config
-│   ├── server.cloudflare.ts     # App bootstrap (createCruzApp)
+│   ├── app.server.ts           # App bootstrap (registerModules)
 │   │
 │   ├── database/
 │   │   ├── schema.ts           # Central schema exports
@@ -229,7 +229,6 @@ The router exposes the service as type-safe API endpoints:
 // src/features/notes/notes.router.ts
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
-import { getAppContainer } from '@cruzjs/core';
 import { router, orgProcedure } from '@cruzjs/core/trpc/context';
 import { requirePermission } from '@cruzjs/start/orgs/auth.utils';
 import { NotesService } from './notes.service';
@@ -238,8 +237,7 @@ import { createNoteSchema, updateNoteSchema } from './notes.validation';
 export const notesRouter = router({
   list: orgProcedure.query(async ({ ctx }) => {
     await requirePermission(ctx.org, 'notes:read');
-    const container = await getAppContainer();
-    const service = container.resolve(NotesService);
+    const service = ctx.container.get(NotesService);
     return service.list(ctx.org.orgId);
   }),
 
@@ -247,8 +245,7 @@ export const notesRouter = router({
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
       await requirePermission(ctx.org, 'notes:read');
-      const container = await getAppContainer();
-      const service = container.resolve(NotesService);
+      const service = ctx.container.get(NotesService);
       const note = await service.getById(input.id);
       if (!note || note.orgId !== ctx.org.orgId) {
         throw new TRPCError({ code: 'NOT_FOUND', message: 'Note not found' });
@@ -260,8 +257,7 @@ export const notesRouter = router({
     .input(createNoteSchema)
     .mutation(async ({ ctx, input }) => {
       await requirePermission(ctx.org, 'notes:write');
-      const container = await getAppContainer();
-      const service = container.resolve(NotesService);
+      const service = ctx.container.get(NotesService);
       return service.create(ctx.org.orgId, ctx.org.userId, input);
     }),
 
@@ -269,8 +265,7 @@ export const notesRouter = router({
     .input(z.object({ id: z.string(), data: updateNoteSchema }))
     .mutation(async ({ ctx, input }) => {
       await requirePermission(ctx.org, 'notes:write');
-      const container = await getAppContainer();
-      const service = container.resolve(NotesService);
+      const service = ctx.container.get(NotesService);
       const note = await service.getById(input.id);
       if (!note || note.orgId !== ctx.org.orgId) {
         throw new TRPCError({ code: 'NOT_FOUND', message: 'Note not found' });
@@ -282,8 +277,7 @@ export const notesRouter = router({
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       await requirePermission(ctx.org, 'notes:delete');
-      const container = await getAppContainer();
-      const service = container.resolve(NotesService);
+      const service = ctx.container.get(NotesService);
       const note = await service.getById(input.id);
       if (!note || note.orgId !== ctx.org.orgId) {
         throw new TRPCError({ code: 'NOT_FOUND', message: 'Note not found' });
@@ -321,21 +315,19 @@ export { notesRouter } from './notes.router';
 
 ### Step 6: Register the Module
 
-Add the module to `createCruzApp()`:
+Add the module to `registerModules()` in `src/app.server.ts`:
 
 ```typescript
-// server.cloudflare.ts
-import { createCruzApp } from '@cruzjs/core';
-import { CloudflareAdapter } from '@cruzjs/adapter-cloudflare';
+// src/app.server.ts
+import 'reflect-metadata';
+import { DrizzleService } from '@cruzjs/core/shared/database/drizzle.service';
+import { registerModules } from '@cruzjs/core/framework/module-registry';
+import { StartModule } from '@cruzjs/start/start.module';
 import * as schema from './database/schema';
 import { NotesModule } from './features/notes';
 
-export default createCruzApp({
-  schema,
-  modules: [NotesModule],
-  adapter: new CloudflareAdapter(),
-  pages: () => import('virtual:react-router/server-build'),
-});
+DrizzleService.setSchema(schema);
+registerModules([StartModule, NotesModule]);
 ```
 
 ### Step 7: Add Routes Inside the Feature
@@ -346,7 +338,7 @@ Create route components inside the feature folder:
 // src/features/notes/routes/index.tsx
 import { useState } from 'react';
 import { useOutletContext } from 'react-router';
-import { trpc } from '~/trpc/client';
+import { trpc } from '@/trpc/client';
 import type { OrgContext } from '@cruzjs/start';
 
 export default function NotesPage() {

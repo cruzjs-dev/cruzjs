@@ -22,21 +22,26 @@ Register the `AIContainerModule` in your app:
 
 ```typescript
 // apps/web/src/app.server.ts
+import { registerModules } from '@cruzjs/core/framework/module-registry';
+import { getAppContainer } from '@cruzjs/core';
+import { StartModule } from '@cruzjs/start/start.module';
 import { AIContainerModule } from '@cruzjs/ai';
-import { createCruzApp } from '@cruzjs/core';
 
-export default createCruzApp({
-  modules: [/* your modules */],
-  containerModules: [AIContainerModule],
-});
+registerModules([StartModule /* , your feature modules */]);
+
+// Load @cruzjs/ai provider services into the app container
+const container = await getAppContainer();
+container.load(AIContainerModule);
 ```
 
 Register your chosen provider:
 
 ```typescript
-// In a startup hook or module initializer
-import { OpenAIProvider, AnthropicProvider } from '@cruzjs/ai';
+// In app.server.ts, after registerModules(...)
+import { getAppContainer } from '@cruzjs/core';
+import { OpenAIProvider, AnthropicProvider, AI_PROVIDER_REGISTRY } from '@cruzjs/ai';
 
+const container = await getAppContainer();
 const registry = container.get(AI_PROVIDER_REGISTRY);
 registry.register(new OpenAIProvider({ apiKey: process.env.OPENAI_API_KEY! }));
 registry.register(new AnthropicProvider({ apiKey: process.env.ANTHROPIC_API_KEY! }));
@@ -256,13 +261,19 @@ const summary = tracker.getSummary('org_abc');
 Wire the AI tRPC router into your app:
 
 ```typescript
-// apps/web/src/trpc/router.ts
-import { aiTrpc } from '@cruzjs/ai';
+// apps/web/src/app.server.ts — expose the AI router via a module
+import { Module } from '@cruzjs/core/di';
+import { AITrpc } from '@cruzjs/ai';
 
-const appRouter = router({
-  ...registerCruzCoreTrpcRouters(),
-  ai: aiTrpc,
-});
+@Module({
+  trpcRouters: {
+    ai: AITrpc,
+  },
+})
+class AIFeatureModule {}
+
+// Add AIFeatureModule to your registerModules([...]) call
+registerModules([StartModule, AIFeatureModule]);
 ```
 
 Available procedures:

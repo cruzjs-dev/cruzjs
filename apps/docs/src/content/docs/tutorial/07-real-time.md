@@ -14,13 +14,11 @@ Add `BroadcastModule` to your app in `apps/web/src/app.server.ts`:
 ```typescript
 import { BroadcastModule } from '@cruzjs/core';
 
-export default createCruzApp({
-  modules: [
-    BroadcastModule,
-    TasksModule,
-    // ...
-  ],
-});
+registerModules([
+  BroadcastModule,
+  TasksModule,
+  // ...
+]);
 ```
 
 That's the server side. One import.

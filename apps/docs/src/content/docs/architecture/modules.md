@@ -142,23 +142,21 @@ import { ProductService } from '@cruzjs/web/features/product';
 
 ## Registering Modules
 
-Modules are registered by passing them to `createCruzApp()`:
+Modules are registered by passing them to `registerModules()` in `src/app.server.ts`:
 
 ```typescript
-// server.cloudflare.ts
-import { createCruzApp } from '@cruzjs/core';
-import { CloudflareAdapter } from '@cruzjs/adapter-cloudflare';
+// src/app.server.ts
+import 'reflect-metadata';
+import { DrizzleService } from '@cruzjs/core/shared/database/drizzle.service';
+import { registerModules } from '@cruzjs/core/framework/module-registry';
+import { StartModule } from '@cruzjs/start/start.module';
 import * as schema from './database/schema';
 import { UserProfileModule } from './features/user-profile';
 import { ProductModule } from './features/product';
 import { AnalyticsModule } from './features/analytics';
 
-export default createCruzApp({
-  schema,
-  modules: [UserProfileModule, ProductModule, AnalyticsModule],
-  adapter: new CloudflareAdapter(),
-  pages: () => import('virtual:react-router/server-build'),
-});
+DrizzleService.setSchema(schema);
+registerModules([StartModule, UserProfileModule, ProductModule, AnalyticsModule]);
 ```
 
 During bootstrap, the following happens for each module:
@@ -176,15 +174,12 @@ For each module in the modules array:
 Module order in the `modules` array matters when one module depends on another. Register foundational modules first:
 
 ```typescript
-export default createCruzApp({
-  schema,
-  modules: [
-    UserProfileModule,  // Other features may depend on user profiles
-    ProductModule,       // Depends on user profiles for createdById
-    AnalyticsModule,     // Depends on products for tracking
-  ],
-  // ...
-});
+registerModules([
+  StartModule,         // Foundational start module (orgs, members, RBAC)
+  UserProfileModule,   // Other features may depend on user profiles
+  ProductModule,       // Depends on user profiles for createdById
+  AnalyticsModule,     // Depends on products for tracking
+]);
 ```
 
 Core and framework modules are loaded automatically before your app modules, so you do not need to register them.
@@ -228,7 +223,7 @@ export class AnalyticsService {
 }
 ```
 
-This works because `ProductModule` is loaded before `AnalyticsModule` (based on module order in `createCruzApp`), so `ProductService` is already bound in the container.
+This works because `ProductModule` is loaded before `AnalyticsModule` (based on module order in `registerModules`), so `ProductService` is already bound in the container.
 
 ### Why There Is No `exports` Property
 

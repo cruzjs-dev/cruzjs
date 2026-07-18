@@ -10,11 +10,12 @@ description: Entity-scoped rich text content with HTML sanitization, mentions, a
 Register the `RichTextModule` in your application:
 
 ```typescript
+// src/app.server.ts
+import { registerModules } from '@cruzjs/core/framework/module-registry';
+import { StartModule } from '@cruzjs/start/start.module';
 import { RichTextModule } from '@cruzjs/saas/rich-text/rich-text.module';
 
-export default createCruzApp({
-  modules: [RichTextModule],
-});
+registerModules([StartModule, RichTextModule]);
 ```
 
 ## Entity-Scoped Content

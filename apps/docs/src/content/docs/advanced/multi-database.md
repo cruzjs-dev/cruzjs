@@ -10,11 +10,12 @@ CruzJS supports connecting to multiple databases within a single application. Th
 Register the `MultiDatabaseModule` in your application:
 
 ```typescript
+// src/app.server.ts
+import { registerModules } from '@cruzjs/core/framework/module-registry';
+import { StartModule } from '@cruzjs/start/start.module';
 import { MultiDatabaseModule } from '@cruzjs/core/multi-database';
 
-export default createCruzApp({
-  modules: [MultiDatabaseModule],
-});
+registerModules([StartModule, MultiDatabaseModule]);
 ```
 
 ## Use Cases

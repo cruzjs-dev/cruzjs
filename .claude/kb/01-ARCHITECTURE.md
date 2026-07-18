@@ -126,11 +126,12 @@ import { ... } from '@cruzjs/web/database/schema';
 ## Bootstrap Flow
 
 ```
-1. server.cloudflare.ts
+1. src/entry.server.tsx  →  import './app.server'
    │
-   └─ createCruzApp({ schema, modules, adapter, pages })
+   └─ src/app.server.ts
        │
-       ├─ Set database schema
+       ├─ DrizzleService.setSchema(schema)
+       ├─ registerModules([StartModule, ...feature modules])
        ├─ Create CruzContainer
        ├─ Initialize RuntimeAdapter (Cloudflare, AWS, Docker, etc.)
        ├─ Load Core Modules (Auth, Email, Job, Upload, Shared)

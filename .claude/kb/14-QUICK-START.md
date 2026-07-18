@@ -121,20 +121,20 @@ Follow patterns in:
 
 ### Step 4: Register Module
 
-Add the module to `createCruzApp` in `server.cloudflare.ts`:
+Add the module to `registerModules` in `src/app.server.ts`:
 
 ```typescript
-// apps/web/src/server.cloudflare.ts
-import { createCruzApp } from '@cruzjs/core/framework/create-cruz-app';
+// apps/web/src/app.server.ts
+import 'reflect-metadata';
+import { DrizzleService } from '@cruzjs/core/shared/database/drizzle.service';
+import { registerModules } from '@cruzjs/core/framework/module-registry';
 import { StartModule } from '@cruzjs/start/start.module';
 import * as schema from './database/schema';
 import { MyFeatureModule } from './features/my-feature/my-feature.module';
 
-export default createCruzApp({
-  schema,
-  modules: [StartModule, MyFeatureModule],
-  pages: () => import('virtual:react-router/server-build'),
-});
+DrizzleService.setSchema(schema);
+
+registerModules([StartModule, MyFeatureModule]);
 ```
 
 If the module defines `pageRoutes`, add it to `routes.ts` to activate its page routes:

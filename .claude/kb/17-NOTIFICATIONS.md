@@ -239,11 +239,13 @@ The `NotificationService` checks the user's channel preferences and only deliver
 `NotificationModule` is included in `StartModule`, so no separate registration is needed:
 
 ```typescript
+// src/app.server.ts
+import { DrizzleService } from '@cruzjs/core/shared/database/drizzle.service';
+import { registerModules } from '@cruzjs/core/framework/module-registry';
 import { StartModule } from '@cruzjs/start/start.module';
+import * as schema from './database/schema';
 
-export default createCruzApp({
-  schema,
-  modules: [StartModule],
-  // ...
-});
+DrizzleService.setSchema(schema);
+
+registerModules([StartModule]);
 ```

@@ -10,11 +10,12 @@ CruzJS supports passwordless authentication through magic links -- users enter t
 Register the `MagicLinkModule` in your application:
 
 ```typescript
+// src/app.server.ts
+import { registerModules } from '@cruzjs/core/framework/module-registry';
+import { StartModule } from '@cruzjs/start/start.module';
 import { MagicLinkModule } from '@cruzjs/core/magic-link';
 
-export default createCruzApp({
-  modules: [MagicLinkModule],
-});
+registerModules([StartModule, MagicLinkModule]);
 ```
 
 ## How It Works

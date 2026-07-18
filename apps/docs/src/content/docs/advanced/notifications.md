@@ -10,11 +10,11 @@ CruzJS ships a multi-channel notification system that routes messages to the rig
 The `NotificationModule` is included in `StartModule`, so it is available automatically if you use `StartModule`:
 
 ```typescript
+// src/app.server.ts
+import { registerModules } from '@cruzjs/core/framework/module-registry';
 import { StartModule } from '@cruzjs/start/start.module';
 
-export default createCruzApp({
-  modules: [StartModule],
-});
+registerModules([StartModule]);
 ```
 
 ## Creating a Notification

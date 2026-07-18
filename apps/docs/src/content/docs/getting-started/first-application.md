@@ -182,7 +182,6 @@ Create `src/features/notes/notes.router.ts`:
 ```typescript
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
-import { getAppContainer } from '@cruzjs/core';
 import { router, protectedProcedure } from '@cruzjs/core/trpc/context';
 import { NotesService } from './notes.service';
 import { createNoteSchema, updateNoteSchema } from './notes.validation';
@@ -190,8 +189,7 @@ import { createNoteSchema, updateNoteSchema } from './notes.validation';
 export const notesRouter = router({
   /** List the current user's notes */
   list: protectedProcedure.query(async ({ ctx }) => {
-    const container = await getAppContainer();
-    const service = container.resolve(NotesService);
+    const service = ctx.container.get(NotesService);
 
     return service.listByUser(ctx.session.user.id);
   }),
@@ -200,8 +198,7 @@ export const notesRouter = router({
   get: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
-      const container = await getAppContainer();
-      const service = container.resolve(NotesService);
+      const service = ctx.container.get(NotesService);
 
       const note = await service.getById(input.id);
 
@@ -220,8 +217,7 @@ export const notesRouter = router({
   create: protectedProcedure
     .input(createNoteSchema)
     .mutation(async ({ ctx, input }) => {
-      const container = await getAppContainer();
-      const service = container.resolve(NotesService);
+      const service = ctx.container.get(NotesService);
 
       return service.create(ctx.session.user.id, input);
     }),
@@ -233,8 +229,7 @@ export const notesRouter = router({
       data: updateNoteSchema,
     }))
     .mutation(async ({ ctx, input }) => {
-      const container = await getAppContainer();
-      const service = container.resolve(NotesService);
+      const service = ctx.container.get(NotesService);
 
       const note = await service.getById(input.id);
       if (!note || note.userId !== ctx.session.user.id) {
@@ -251,8 +246,7 @@ export const notesRouter = router({
   delete: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const container = await getAppContainer();
-      const service = container.resolve(NotesService);
+      const service = ctx.container.get(NotesService);
 
       const note = await service.getById(input.id);
       if (!note || note.userId !== ctx.session.user.id) {
@@ -271,7 +265,7 @@ export const notesRouter = router({
 Key patterns:
 
 - **`protectedProcedure`** ensures the user is authenticated. Use `orgProcedure` instead if your data is scoped to an organization rather than a user.
-- **`getAppContainer()`** resolves services from the DI container. Never instantiate services with `new`.
+- **`ctx.container.get(Service)`** resolves services from the DI container inside a procedure (outside a request, use `await getAppContainer()`). Never instantiate services with `new`.
 - **Ownership checks** verify the note belongs to the current user before allowing reads, updates, or deletes.
 
 ## Step 6: Create the Module
@@ -304,21 +298,23 @@ export type { Note, NewNote } from './notes.schema';
 
 ## Step 7: Register the Module
 
-Add the module to your `createCruzApp()` call:
+Add the module to your `registerModules()` call:
 
 ```typescript
-// server.cloudflare.ts
-import { createCruzApp } from '@cruzjs/core';
-import { CloudflareAdapter } from '@cruzjs/adapter-cloudflare';
+// src/app.server.ts
+import 'reflect-metadata';
+import { DrizzleService } from '@cruzjs/core/shared/database/drizzle.service';
+import { registerModules } from '@cruzjs/core/framework/module-registry';
+import { StartModule } from '@cruzjs/start/start.module';
 import * as schema from './database/schema';
 import { NotesModule } from './features/notes';
 
-export default createCruzApp({
-  schema,
-  modules: [NotesModule],
-  adapter: new CloudflareAdapter(),
-  pages: () => import('virtual:react-router/server-build'),
-});
+DrizzleService.setSchema(schema);
+
+registerModules([
+  StartModule,
+  NotesModule,
+]);
 ```
 
 The `@Module` decorator in `NotesModule` automatically registers both the `NotesService` as an injectable provider and the `notesRouter` under the `notes` namespace. No additional router registration is needed.
@@ -516,7 +512,7 @@ Here is what you built and the file each piece lives in:
 | Service | `features/notes/notes.service.ts` | `@Injectable` class with CRUD operations |
 | Router | `features/notes/notes.router.ts` | tRPC endpoints with auth and ownership checks |
 | Module | `features/notes/notes.module.ts` | `@Module` declaring providers and trpcRouters |
-| Registration | `server.cloudflare.ts` | Adds module to the `modules` array in `createCruzApp` |
+| Registration | `app.server.ts` | Adds module to the `registerModules([...])` array |
 | Schema export | `database/schema.ts` | Re-exports the notes table for Drizzle |
 | List page | `features/notes/routes/index.tsx` | Notes list with create form |
 | Detail page | `features/notes/routes/$id.tsx` | Single note view |

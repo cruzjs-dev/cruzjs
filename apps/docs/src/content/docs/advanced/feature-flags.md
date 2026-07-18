@@ -10,11 +10,12 @@ CruzJS includes a feature flag system for toggling functionality at runtime with
 Register the `FeatureFlagModule` in your application:
 
 ```typescript
+// src/app.server.ts
+import { registerModules } from '@cruzjs/core/framework/module-registry';
+import { StartModule } from '@cruzjs/start/start.module';
 import { FeatureFlagModule } from '@cruzjs/core/feature-flags';
 
-export default createCruzApp({
-  modules: [FeatureFlagModule],
-});
+registerModules([StartModule, FeatureFlagModule]);
 ```
 
 ## Creating Feature Flags

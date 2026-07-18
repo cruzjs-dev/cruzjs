@@ -74,21 +74,27 @@ The worker runtime executes your server-side code at the edge, close to the user
 
 ### 3. React Router Entry Point
 
-All server-side logic enters through `entry.server.tsx`, which has already bootstrapped the application:
+All server-side logic enters through `entry.server.tsx`, which imports `src/app.server.ts` to bootstrap the application before handling any request:
 
 ```typescript
-// server.cloudflare.ts
-import { createCruzApp } from '@cruzjs/core';
-import { CloudflareAdapter } from '@cruzjs/adapter-cloudflare';
+// src/app.server.ts
+import 'reflect-metadata';
+import { DrizzleService } from '@cruzjs/core/shared/database/drizzle.service';
+import { registerModules } from '@cruzjs/core/framework/module-registry';
+import { StartModule } from '@cruzjs/start/start.module';
 import * as schema from './database/schema';
 import { UserProfileModule } from './features/user-profile';
 
-export default createCruzApp({
-  schema,
-  modules: [UserProfileModule],
-  adapter: new CloudflareAdapter(),
-  pages: () => import('virtual:react-router/server-build'),
-});
+DrizzleService.setSchema(schema);
+registerModules([StartModule, UserProfileModule]);
+```
+
+```typescript
+// src/entry.server.tsx
+import './app.server';
+import { handleRequest } from '@cruzjs/core/framework/entry-handler.server';
+
+export default handleRequest;
 ```
 
 React Router handles two types of server execution:
@@ -159,14 +165,12 @@ The procedure resolver is the entry point for your business logic. CruzJS provid
 
 ```typescript
 import { router, orgProcedure } from '@cruzjs/core/trpc/context';
-import { getAppContainer } from '@cruzjs/core';
 
 export const productRouter = router({
   list: orgProcedure.query(async ({ ctx }) => {
     await requirePermission(ctx.org, 'product:read');
 
-    const container = await getAppContainer();
-    const service = container.resolve(ProductService);
+    const service = ctx.container.get(ProductService);
     return service.list(ctx.org.orgId);
   }),
 });

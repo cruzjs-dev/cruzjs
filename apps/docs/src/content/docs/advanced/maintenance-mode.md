@@ -10,11 +10,12 @@ CruzJS provides a maintenance mode that returns a 503 response to all requests, 
 Register the `MaintenanceModule` in your application:
 
 ```typescript
+// src/app.server.ts
+import { registerModules } from '@cruzjs/core/framework/module-registry';
+import { StartModule } from '@cruzjs/start/start.module';
 import { MaintenanceModule } from '@cruzjs/core/maintenance';
 
-export default createCruzApp({
-  modules: [MaintenanceModule],
-});
+registerModules([StartModule, MaintenanceModule]);
 ```
 
 ## Enabling Maintenance Mode

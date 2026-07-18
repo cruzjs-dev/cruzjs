@@ -182,7 +182,7 @@ Log important actions for compliance:
 import { AuditLogService } from '@cruzjs/saas';
 
 // In router mutation
-const auditService = container.get<AuditLogService>(AuditLogService);
+const auditService = ctx.container.get(AuditLogService);
 
 await auditService.logAudit(
   ctx.org.orgId,
@@ -290,8 +290,8 @@ Register `TwoFactorModule` to add TOTP and SMS-based two-factor authentication.
 ```typescript
 import { TwoFactorModule } from '@cruzjs/core/two-factor';
 
-// Add to modules in createCruzApp
-modules: [StartModule, TwoFactorModule, ...]
+// Add to registerModules([...]) in src/app.server.ts
+registerModules([StartModule, TwoFactorModule, /* ... */]);
 ```
 
 ### tRPC Procedures
@@ -316,8 +316,8 @@ Register `MagicLinkModule` to enable passwordless authentication via email magic
 ```typescript
 import { MagicLinkModule } from '@cruzjs/core/magic-link';
 
-// Add to modules in createCruzApp
-modules: [StartModule, MagicLinkModule, ...]
+// Add to registerModules([...]) in src/app.server.ts
+registerModules([StartModule, MagicLinkModule, /* ... */]);
 ```
 
 The magic link flow works as follows:

@@ -100,7 +100,7 @@ import { db } from '../database/db'; // Drizzle — Node.js only!
 ✅ Right — client only uses tRPC hooks:
 ```typescript
 // apps/web/src/routes/invoices._index.tsx
-import { trpc } from '~/trpc/client';
+import { trpc } from '@/trpc/client';
 
 export default function InvoicesPage() {
   const { data } = trpc.invoices.list.useQuery();
@@ -196,22 +196,22 @@ After adding: `cruz db generate && cruz db migrate`.
 
 ## 8. Registering Module in Only One Place
 
-**Risk: DI works but routes 404 (or vice versa).** Modules must be registered in **both** `createCruzApp` (for DI/tRPC) and `createCruzRoutes` (for page routes).
+**Risk: DI works but routes 404 (or vice versa).** Modules must be registered in **both** `registerModules` (for DI/tRPC) and `createCruzRoutes` (for page routes).
 
-❌ Wrong — registered in createCruzApp but not createCruzRoutes:
+❌ Wrong — registered via `registerModules` but not `createCruzRoutes`:
 ```typescript
-// server.cloudflare.ts
-createCruzApp({ modules: [InvoicesModule, ...] }); // ✓ DI works
+// src/app.server.ts
+registerModules([InvoicesModule, StartModule]); // ✓ DI works
 
-// routes.ts
+// src/routes.ts
 createCruzRoutes({ modules: [StartModule] }); // ✗ InvoicesModule missing — routes 404
 ```
 
-✅ Right — same module list in both (or use `createCruzRoutes` with no modules arg, which auto-reads from `createCruzApp`'s registry):
+✅ Right — same module list in both (or use `createCruzRoutes` with no modules arg, which auto-reads from the module registry populated by `registerModules`):
 ```typescript
-// routes.ts
+// src/routes.ts
 createCruzRoutes({
-  // modules omitted — automatically uses what createCruzApp registered
+  // modules omitted — automatically uses what registerModules registered
   layout: RootLayout,
 });
 ```

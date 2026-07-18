@@ -211,7 +211,7 @@ Every page follows the same pattern:
 5. The component renders using `@cruzjs/ui` components and Tailwind styling.
 
 ```tsx
-import { trpc } from '~/trpc/client';
+import { trpc } from '@/trpc/client';
 import { PageShell, StatsGrid, Spinner } from '@cruzjs/ui';
 
 export default function DashboardPage() {

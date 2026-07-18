@@ -202,21 +202,19 @@ export class ProjectModule {}
 
 ## 6. Register the module
 
-Add the module to `createCruzApp()`:
+Add the module to `registerModules()`:
 
 ```typescript
-// server.cloudflare.ts
-import { createCruzApp } from '@cruzjs/core';
-import { CloudflareAdapter } from '@cruzjs/adapter-cloudflare';
+// src/app.server.ts
+import 'reflect-metadata';
+import { DrizzleService } from '@cruzjs/core/shared/database/drizzle.service';
+import { registerModules } from '@cruzjs/core/framework/module-registry';
+import { StartModule } from '@cruzjs/start/start.module';
 import * as schema from './database/schema';
 import { ProjectModule } from './features/projects/project.module';
 
-export default createCruzApp({
-  schema,
-  modules: [ProjectModule],
-  adapter: new CloudflareAdapter(),
-  pages: () => import('virtual:react-router/server-build'),
-});
+DrizzleService.setSchema(schema);
+registerModules([StartModule, ProjectModule]);
 ```
 
 ## 7. Update the app router type
@@ -244,7 +242,7 @@ export type AppRouter = typeof appRouter;
 
 ```tsx
 // apps/web/src/routes/orgs.$slug.projects.tsx
-import { trpc } from '~/trpc/client';
+import { trpc } from '@/trpc/client';
 
 export default function ProjectsPage() {
   const { data: projects, isLoading, refetch } = trpc.project.list.useQuery();
@@ -289,7 +287,7 @@ export default function ProjectsPage() {
 ```tsx
 // apps/web/src/routes/orgs.$slug.projects.new.tsx
 import { useNavigate } from 'react-router';
-import { trpc } from '~/trpc/client';
+import { trpc } from '@/trpc/client';
 import { useState } from 'react';
 
 export default function NewProjectPage() {
@@ -349,7 +347,7 @@ export default function NewProjectPage() {
 | `project.service.ts` | Injectable service with `@Injectable()` |
 | `project.trpc.ts` | OOP tRPC router with `@Router()`, `@Route()`, `@Inject()` |
 | `project.module.ts` | `@Module` registering providers and the trpcRouters class |
-| `server.cloudflare.ts` | Register the module in `createCruzApp()` |
+| `src/app.server.ts` | Register the module in `registerModules()` |
 | `trpc/router.ts` | Add `RouterProcedures<ProjectTrpc>` for client types |
 | Route files | React components using tRPC hooks |
 

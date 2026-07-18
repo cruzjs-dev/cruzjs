@@ -144,18 +144,17 @@ Add custom paths via environment variable:
 LOG_REDACT_PATHS=apiKey,context.stripeToken,payload.privateKey
 ```
 
-Or programmatically in your server entry:
+Or programmatically in `src/app.server.ts`:
 
 ```ts
+import { registerModules } from '@cruzjs/core/framework/module-registry';
 import { LoggingModule } from '@cruzjs/core';
 
-export default createCruzApp({
-  modules: [
-    LoggingModule.forRoot({
-      redactPaths: ['apiKey', 'context.internalSecret'],
-    }),
-  ],
-});
+registerModules([
+  LoggingModule.forRoot({
+    redactPaths: ['apiKey', 'context.internalSecret'],
+  }),
+]);
 ```
 
 ## Per-namespace log levels
@@ -229,13 +228,11 @@ LoggingModule.forRoot({
 Resolve the logger from the container for one-off logging in procedures:
 
 ```ts
-import { getAppContainer } from '@cruzjs/core';
 import { Logger } from '@cruzjs/core';
 
 export const adminRouter = router({
   dangerousReset: orgProcedure.mutation(async ({ ctx }) => {
-    const container = await getAppContainer();
-    const logger = container.resolve(Logger);
+    const logger = ctx.container.get(Logger);
 
     logger.warning('Admin triggered dangerous reset', {
       orgId: ctx.org.orgId,

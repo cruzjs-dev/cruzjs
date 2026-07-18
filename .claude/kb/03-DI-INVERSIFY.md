@@ -43,20 +43,19 @@ import { myFeatureTrpc } from './my-feature.trpc';
 export class MyFeatureModule {}
 ```
 
-### 3. Register Module in createCruzApp
+### 3. Register Module in app.server.ts
 
 ```typescript
-// apps/web/src/server.cloudflare.ts
-import { createCruzApp } from '@cruzjs/core/framework/create-cruz-app';
+// apps/web/src/app.server.ts
+import 'reflect-metadata';
+import { DrizzleService } from '@cruzjs/core/shared/database/drizzle.service';
+import { registerModules } from '@cruzjs/core/framework/module-registry';
 import { StartModule } from '@cruzjs/start/start.module';
 import * as schema from './database/schema';
 import { MyFeatureModule } from './features/my-feature/my-feature.module';
 
-export default createCruzApp({
-  schema,
-  modules: [StartModule, MyFeatureModule],
-  pages: () => import('virtual:react-router/server-build'),
-});
+DrizzleService.setSchema(schema);
+registerModules([StartModule, MyFeatureModule]);
 ```
 
 ## @Module Decorator
@@ -221,14 +220,14 @@ export class JobHandlerRegistry {
 
 ## Getting Services in Routers
 
+Inside a tRPC procedure the DI container is available on `ctx.container` — use `ctx.container.get(Service)` (no `await` needed):
+
 ```typescript
-import { getAppContainer } from '@cruzjs/core';
 import { MyFeatureService } from './my-feature.service';
 
 export const myFeatureTrpc = router({
   list: orgProcedure.query(async ({ ctx }) => {
-    const container = await getAppContainer();
-    const service = container.resolve(MyFeatureService);
+    const service = ctx.container.get(MyFeatureService);
     return service.list(ctx.org.orgId);
   }),
 });
@@ -344,7 +343,7 @@ export async function sendWelcomeEmail(event: UserRegisteredEvent): Promise<void
 2. boot(container)               # Post-initialization (optional)
 ```
 
-**Preferred pattern** - use `@Module` for everything, register via `createCruzApp({ modules: [...] })`:
+**Preferred pattern** - use `@Module` for everything, register via `registerModules([...])`:
 ```typescript
 @Module({
   providers: [MyService],
@@ -353,12 +352,9 @@ export async function sendWelcomeEmail(event: UserRegisteredEvent): Promise<void
 })
 export class MyModule {}
 
-// In server.cloudflare.ts:
-export default createCruzApp({
-  schema,
-  modules: [StartModule, MyModule],
-  pages: () => import('virtual:react-router/server-build'),
-});
+// In src/app.server.ts:
+DrizzleService.setSchema(schema);
+registerModules([StartModule, MyModule]);
 ```
 
 ## Module Examples
@@ -435,6 +431,6 @@ export class AuthModule {}
 2. **Use `@Inject()`** for constructor parameters (or rely on auto-injection for @Injectable classes)
 3. **Bind to singleton scope** for stateless services (default)
 4. **Create @Module classes** instead of ContainerModule
-5. **Get services via container.resolve()** in routers
+5. **Get services via `ctx.container.get()`** in tRPC routers (use `getAppContainer()` + `.resolve()` only outside procedures — jobs, listeners, scripts)
 6. **Never instantiate services with `new`** - use DI
 7. **Register routers in modules** using the `trpcRouters` option

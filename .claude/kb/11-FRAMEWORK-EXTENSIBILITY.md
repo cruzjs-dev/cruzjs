@@ -1,6 +1,6 @@
 # Framework Extensibility
 
-CruzJS follows a **Module** pattern, allowing you to extend the framework without modifying core code. Modules are registered via `createCruzApp({ modules: [...] })`.
+CruzJS follows a **Module** pattern, allowing you to extend the framework without modifying core code. Modules are registered via `registerModules([...])` in `src/app.server.ts`.
 
 ## Architecture Overview
 
@@ -23,7 +23,7 @@ apps/
 Modules are the primary way to extend CruzJS:
 
 1. Create a `@Module` class with providers, trpcRouters, pageRoutes, and events
-2. Register modules via `createCruzApp({ modules: [...] })`
+2. Register modules via `registerModules([...])` in `src/app.server.ts`
 
 ### Creating a Module
 
@@ -67,18 +67,17 @@ export class BlogModule {}
 ### Registering Modules
 
 ```typescript
-// apps/web/src/server.cloudflare.ts
-import { createCruzApp } from '@cruzjs/core/framework/create-cruz-app';
+// apps/web/src/app.server.ts
+import 'reflect-metadata';
+import { DrizzleService } from '@cruzjs/core/shared/database/drizzle.service';
+import { registerModules } from '@cruzjs/core/framework/module-registry';
 import { StartModule } from '@cruzjs/start/start.module';
 import * as schema from './database/schema';
 import { UserProfileModule } from './features/user-profile/user-profile.module';
 import { BlogModule } from './features/blog/blog.module';
 
-export default createCruzApp({
-  schema,
-  modules: [StartModule, UserProfileModule, BlogModule],
-  pages: () => import('virtual:react-router/server-build'),
-});
+DrizzleService.setSchema(schema);
+registerModules([StartModule, UserProfileModule, BlogModule]);
 ```
 
 ### Registering Module Page Routes
@@ -215,7 +214,7 @@ export class MyFeatureModule {}
 
 ## Built-in Framework Modules
 
-CruzJS ships with a rich set of built-in modules. Register them via `createCruzApp({ modules: [...] })`.
+CruzJS ships with a rich set of built-in modules. Register them via `registerModules([...])` in `src/app.server.ts`.
 
 ### From `@cruzjs/start`
 
@@ -274,9 +273,10 @@ import { RichTextModule } from '@cruzjs/saas/rich-text/rich-text.module';
 ### Complete Registration Example
 
 ```typescript
-// apps/web/src/server.cloudflare.ts
-import { createCruzApp } from '@cruzjs/core/framework/create-cruz-app';
-import { CloudflareAdapter } from '@cruzjs/adapter-cloudflare';
+// apps/web/src/app.server.ts
+import 'reflect-metadata';
+import { DrizzleService } from '@cruzjs/core/shared/database/drizzle.service';
+import { registerModules } from '@cruzjs/core/framework/module-registry';
 import { StartModule } from '@cruzjs/start/start.module';
 import { MaintenanceModule } from '@cruzjs/core/maintenance';
 import { SchedulerModule } from '@cruzjs/core/scheduler';
@@ -302,36 +302,32 @@ import { BillingModule } from '@cruzjs/saas/billing/billing.module';
 import { RichTextModule } from '@cruzjs/saas/rich-text/rich-text.module';
 import * as schema from './database/schema';
 
-export default createCruzApp({
-  schema,
-  adapter: new CloudflareAdapter(),
-  modules: [
-    StartModule,           // Org, UserProfile, ApiKeys, Dashboard, Notifications, RealTime, Integrations, AiConnections, SocialAuth
-    MaintenanceModule,
-    SchedulerModule,
-    FeatureFlagModule,
-    WebhookModule,
-    BroadcastModule,
-    RateLimitModule,
-    SessionModule,
-    AuditModule,
-    TwoFactorModule,
-    MagicLinkModule,
-    SearchModule,
-    MultiDatabaseModule,
-    SitemapModule,
-    PaginationModule,
-    SoftDeleteModule,
-    VersioningModule,
-    ApiModule,
-    ErrorReportingModule,
-    TracingModule,
-    AdminModule,
-    BillingModule,
-    RichTextModule,
-  ],
-  pages: () => import('virtual:react-router/server-build'),
-});
+DrizzleService.setSchema(schema);
+registerModules([
+  StartModule,           // Org, UserProfile, ApiKeys, Dashboard, Notifications, RealTime, Integrations, AiConnections, SocialAuth
+  MaintenanceModule,
+  SchedulerModule,
+  FeatureFlagModule,
+  WebhookModule,
+  BroadcastModule,
+  RateLimitModule,
+  SessionModule,
+  AuditModule,
+  TwoFactorModule,
+  MagicLinkModule,
+  SearchModule,
+  MultiDatabaseModule,
+  SitemapModule,
+  PaginationModule,
+  SoftDeleteModule,
+  VersioningModule,
+  ApiModule,
+  ErrorReportingModule,
+  TracingModule,
+  AdminModule,
+  BillingModule,
+  RichTextModule,
+]);
 ```
 
 You only need to register the modules you use. `StartModule` is the only one most apps require.
@@ -406,7 +402,7 @@ export class BlogModule {}
 ## Module Lifecycle
 
 ```
-1. createCruzApp({ schema, modules, adapter, pages })  # Configure and initialize:
+1. registerModules([...]) in src/app.server.ts  # Configure and initialize:
    ├─ Create CruzContainer
    ├─ Load Core Modules (Auth, Email, Job, etc.)
    ├─ Load Start Modules (Org, Members, Permissions)

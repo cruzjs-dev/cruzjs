@@ -14,7 +14,7 @@ npm install @cruzjs/adapter-cloudflare
 ## Usage
 
 ```typescript
-// server.cloudflare.ts
+// src/app.server.ts
 import { CloudflareAdapter } from '@cruzjs/adapter-cloudflare';
 
 export default createCruzApp({

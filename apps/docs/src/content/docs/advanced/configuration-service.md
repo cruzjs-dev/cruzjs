@@ -135,9 +135,8 @@ export class MyService {
 
 ```typescript
 export const settingsRouter = router({
-  getAppInfo: protectedProcedure.query(async () => {
-    const container = await getAppContainer();
-    const config = container.resolve(ConfigService);
+  getAppInfo: protectedProcedure.query(async ({ ctx }) => {
+    const config = ctx.container.get(ConfigService);
 
     return {
       appUrl: config.getOrThrow<string>('APP_URL'),

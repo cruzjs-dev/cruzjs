@@ -10,11 +10,12 @@ CruzJS provides an outbound webhook system for notifying external services when 
 Register the `WebhookModule` in your application:
 
 ```typescript
+// src/app.server.ts
+import { registerModules } from '@cruzjs/core/framework/module-registry';
+import { StartModule } from '@cruzjs/start/start.module';
 import { WebhookModule } from '@cruzjs/core/webhooks';
 
-export default createCruzApp({
-  modules: [WebhookModule],
-});
+registerModules([StartModule, WebhookModule]);
 ```
 
 ## Creating Webhooks

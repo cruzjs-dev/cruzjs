@@ -10,11 +10,12 @@ CruzJS provides observability through three modules: error reporting for capturi
 ### Setup
 
 ```typescript
+// src/app.server.ts
+import { registerModules } from '@cruzjs/core/framework/module-registry';
+import { StartModule } from '@cruzjs/start/start.module';
 import { ErrorReportingModule } from '@cruzjs/monitor/error-reporting';
 
-export default createCruzApp({
-  modules: [ErrorReportingModule],
-});
+registerModules([StartModule, ErrorReportingModule]);
 ```
 
 ### What Gets Captured
@@ -34,11 +35,12 @@ Errors are forwarded to your configured error reporting service (Sentry, Honeyba
 ### Setup
 
 ```typescript
+// src/app.server.ts
+import { registerModules } from '@cruzjs/core/framework/module-registry';
+import { StartModule } from '@cruzjs/start/start.module';
 import { TracingModule } from '@cruzjs/monitor/tracing';
 
-export default createCruzApp({
-  modules: [TracingModule],
-});
+registerModules([StartModule, TracingModule]);
 ```
 
 ### Configuration
@@ -146,12 +148,13 @@ export class InvoiceService {
 Full configuration for Honeycomb tracing and logging:
 
 ```typescript
+// src/app.server.ts
+import { registerModules } from '@cruzjs/core/framework/module-registry';
+import { StartModule } from '@cruzjs/start/start.module';
 import { TracingModule } from '@cruzjs/monitor/tracing';
 import { ErrorReportingModule } from '@cruzjs/monitor/error-reporting';
 
-export default createCruzApp({
-  modules: [TracingModule, ErrorReportingModule],
-});
+registerModules([StartModule, TracingModule, ErrorReportingModule]);
 ```
 
 ```bash

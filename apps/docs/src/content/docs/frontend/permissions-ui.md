@@ -49,8 +49,7 @@ export default function OrgSettingsPage() {
     return (
       <PermissionDenied
         message="Only organization owners and admins can access settings."
-        actionLabel="Back to Overview"
-        onAction={() => navigate('../overview')}
+        action={{ label: 'Back to Overview', onClick: () => navigate('../overview') }}
       />
     );
   }
@@ -145,7 +144,7 @@ export function hasMinRole(
 Use it in components:
 
 ```tsx
-import { hasMinRole } from '~/utils/permissions';
+import { hasMinRole } from '@/utils/permissions';
 
 function ProjectActions({ currentUserRole }: { currentUserRole: string | null }) {
   return (
@@ -220,8 +219,7 @@ export const orgSettingsRouter = router({
       // This throws FORBIDDEN if the user lacks permission
       await requirePermission(ctx.org, 'org:settings:write');
 
-      const container = await getAppContainer();
-      const service = container.resolve(OrgService);
+      const service = ctx.container.get(OrgService);
       return service.updateSettings(ctx.org.orgId, input);
     }),
 });

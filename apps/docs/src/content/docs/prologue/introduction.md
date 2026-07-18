@@ -37,7 +37,7 @@ When you rename a database column, the compiler tells you every query, every API
 - **Domain events** — Synchronous and queued event listeners for decoupled side effects
 - **Background jobs** — Priority-based job queue with retry logic, exponential backoff, and lookup keys
 - **Unified CLI** — `cruz dev`, `cruz db migrate`, `cruz deploy production`, `cruz new worker`, and more
-- **Module pattern** -- Register feature modules via `createCruzApp({ modules: [...] })` without modifying framework code. Each feature owns its schema, service, router, and events
+- **Module pattern** -- Register feature modules via `registerModules([...])` without modifying framework code. Each feature owns its schema, service, router, and events
 - **Cloudflare bindings** -- D1, KV, R2, Queues, and Workers AI with automatic local facades for development
 - **Runtime adapter layer** -- The binding abstraction behind the [multi-cloud roadmap](/adapters/overview) (Cloudflare is the supported target today)
 

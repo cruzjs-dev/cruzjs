@@ -31,8 +31,7 @@ export const projectRouter = router({
   get: orgProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
-      const container = await getAppContainer();
-      const service = container.resolve(ProjectService);
+      const service = ctx.container.get(ProjectService);
       const project = await service.getById(input.id);
 
       if (!project || project.orgId !== ctx.org.orgId) {

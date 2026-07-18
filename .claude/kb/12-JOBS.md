@@ -28,8 +28,8 @@ Queue Consumer Worker
 | `JobService` | CRUD operations + queue dispatch on creation |
 | `JobHandlerRegistry` | Collects registered handlers via multi-injection |
 | `QueueService` | Sends messages to Cloudflare Queues |
-| `handleJobMessage` | Queue consumer logic (in `job-queue.consumer.ts`) |
-| `handleJobBatch` | Batch consumer for CF Workers `queue()` handler |
+| `handleJobMessage` | Queue consumer logic for a single message (in `job-queue.consumer.ts`) |
+| `processQueueBatch` | Batch consumer entry point for a CF Workers `queue()` handler |
 
 ### Job Lifecycle
 
@@ -118,7 +118,7 @@ const job = await jobService.createJob({
 
 ## Queue Consumer Setup
 
-The main app's `server.cloudflare.ts` exports a `queue()` handler that processes job messages. Add the queue binding to `wrangler.toml`:
+Job messages are processed by a Cloudflare Queue consumer that calls `processQueueBatch`. Add the queue binding to `wrangler.toml`:
 
 ```toml
 [[queues.consumers]]
@@ -131,16 +131,20 @@ queue = "cruz-jobs"
 binding = "JOBS_QUEUE"
 ```
 
-For custom queue consumer workers, use `handleJobMessage` or `handleJobBatch`:
+For a queue consumer worker, use `processQueueBatch` (batch) or `handleJobMessage` (single message). `processQueueBatch` bootstraps the DI container and sets the schema for you:
 
 ```typescript
-import { handleJobBatch } from '@cruzjs/core/jobs/job-queue.consumer';
+import { processQueueBatch } from '@cruzjs/core/jobs/job-queue.consumer';
+import * as schema from './database/schema';
 
 export default {
   async queue(batch, env, ctx) {
-    const container = await bootstrapContainer(env);
-    await handleJobBatch(batch.messages.map(m => ({ body: m.body })), container);
-    batch.messages.forEach(m => m.ack());
+    await processQueueBatch(
+      batch.messages.map((m) => ({ body: m.body })),
+      env,
+      schema,
+    );
+    batch.messages.forEach((m) => m.ack());
   },
 };
 ```

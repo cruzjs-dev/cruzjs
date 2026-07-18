@@ -17,7 +17,7 @@ A typical CruzJS form follows this structure:
 ```tsx
 import { useState } from 'react';
 import { z } from 'zod';
-import { trpc } from '~/trpc/client';
+import { trpc } from '@/trpc/client';
 
 const createProjectSchema = z.object({
   name: z.string().min(1, 'Name is required').max(100, 'Name must be under 100 characters'),

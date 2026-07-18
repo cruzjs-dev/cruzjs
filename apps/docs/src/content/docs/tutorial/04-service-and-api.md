@@ -248,19 +248,15 @@ export default createCruzRoutes({
 
 ## Register the Module
 
-Add `TodosModule` to `src/server.cloudflare.ts`:
+Add `TodosModule` to `src/app.server.ts`:
 
 ```typescript
 import { TodosModule } from './features/todos';  // add this
 
-export default createCruzApp({
-  schema,
-  modules: [
-    StartModule,
-    TodosModule,  // add this
-  ],
-  pages: () => import('virtual:react-router/server-build'),
-});
+registerModules([
+  StartModule,
+  TodosModule,  // add this
+]);
 ```
 
 <Aside type="tip">

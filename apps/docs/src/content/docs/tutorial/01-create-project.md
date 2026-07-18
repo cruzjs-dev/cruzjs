@@ -45,16 +45,21 @@ taskboard/
 
 ## Key files to know
 
-**`apps/web/src/app.server.ts`** — where you register modules and configure the framework.
+**`apps/web/src/app.server.ts`** — where you register your schema and modules and configure the framework.
 
 ```typescript
-import { createCruzApp } from '@cruzjs/core';
+import 'reflect-metadata';
+import { DrizzleService } from '@cruzjs/core/shared/database/drizzle.service';
+import { registerModules } from '@cruzjs/core/framework/module-registry';
+import { StartModule } from '@cruzjs/start/start.module';
+import * as schema from './database/schema';
 
-export default createCruzApp({
-  modules: [
-    // your feature modules go here
-  ],
-});
+DrizzleService.setSchema(schema);
+
+registerModules([
+  StartModule,
+  // your feature modules go here
+]);
 ```
 
 **`apps/web/src/database/schema.ts`** — one file for all your Drizzle table definitions. No separate migration files to create by hand; Cruz generates them.

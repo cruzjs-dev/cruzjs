@@ -264,8 +264,7 @@ export const notesRouter = router({
     .input(z.object({ id: z.string(), data: updateNoteSchema }))
     .mutation(async ({ ctx, input }) => {
       await requirePermission(ctx.org, 'notes:write');
-      const container = await getAppContainer();
-      const service = container.resolve(NotesService);
+      const service = ctx.container.get(NotesService);
 
       // Always verify ownership
       const note = await service.getById(input.id);

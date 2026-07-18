@@ -1,27 +1,25 @@
 ---
 title: Module Registration
-description: How to register feature modules with createCruzApp, configure providers, tRPC routers, page routes, and event listeners using the @Module pattern.
+description: How to register feature modules with registerModules, configure providers, tRPC routers, page routes, and event listeners using the @Module pattern.
 ---
 
-## Registering Modules with createCruzApp
+## Registering Modules with registerModules
 
-Feature modules are registered by passing them to `createCruzApp()` in your server entry file (`server.cloudflare.ts` for Cloudflare deployments):
+Feature modules are registered by passing them to `registerModules()` in your app bootstrap file (`src/app.server.ts` for Cloudflare deployments):
 
 ```typescript
-// server.cloudflare.ts
-import { createCruzApp } from '@cruzjs/core';
-import { CloudflareAdapter } from '@cruzjs/adapter-cloudflare';
+// src/app.server.ts
+import 'reflect-metadata';
+import { DrizzleService } from '@cruzjs/core/shared/database/drizzle.service';
+import { registerModules } from '@cruzjs/core/framework/module-registry';
+import { StartModule } from '@cruzjs/start/start.module';
 import * as schema from './database/schema';
 import { ProductModule } from './features/product/product.module';
 import { AnalyticsModule } from './features/analytics/analytics.module';
 import { NotificationModule } from './features/notifications/notification.module';
 
-export default createCruzApp({
-  schema,
-  modules: [ProductModule, AnalyticsModule, NotificationModule],
-  adapter: new CloudflareAdapter(),
-  pages: () => import('virtual:react-router/server-build'),
-});
+DrizzleService.setSchema(schema);
+registerModules([StartModule, ProductModule, AnalyticsModule, NotificationModule]);
 ```
 
 Each module is a `@Module()` class that declares everything the feature contributes -- services, tRPC routers, page routes, and event listeners:
@@ -56,22 +54,18 @@ No separate `.provider.ts` file is needed. The module is the only file required.
 
 ### Module Ordering
 
-Module order in the `modules` array determines load order. Register modules that other modules depend on first:
+Module order in the `registerModules([...])` array determines load order. Register modules that other modules depend on first:
 
 ```typescript
-export default createCruzApp({
-  schema,
-  modules: [
-    // UserProfileModule must come first -- other features inject UserProfileService
-    UserProfileModule,
-    // ProductModule depends on UserProfileService for creator info
-    ProductModule,
-    // AnalyticsModule depends on ProductService
-    AnalyticsModule,
-  ],
-  adapter: new CloudflareAdapter(),
-  pages: () => import('virtual:react-router/server-build'),
-});
+registerModules([
+  StartModule,
+  // UserProfileModule must come first -- other features inject UserProfileService
+  UserProfileModule,
+  // ProductModule depends on UserProfileService for creator info
+  ProductModule,
+  // AnalyticsModule depends on ProductService
+  AnalyticsModule,
+]);
 ```
 
 Core modules (`SharedModule`, `AuthModule`, `JobModule`, etc.) and framework modules (`OrgModule`, `BillingModule`, etc.) are loaded automatically before your app modules.
@@ -120,7 +114,7 @@ src/features/product/
 └── index.ts
 ```
 
-Routes declared in `pageRoutes` are automatically merged into the application's route tree when the module is passed to `createCruzApp()` or `createCruzRoutes()`.
+Routes declared in `pageRoutes` are automatically merged into the application's route tree when the module is passed to `registerModules()` or `createCruzRoutes()`.
 
 In most cases, you will register routes directly in `src/routes.ts` instead of using `pageRoutes`:
 
@@ -292,7 +286,7 @@ export { InvoiceService } from './invoice.service';
 ## Legacy: Service Provider Pattern (Removed)
 
 :::caution[Removed]
-The `ServiceProvider` pattern, `BaseServiceProvider`, `setUserProviders()`, and `setup.server.ts` registration have been removed. Use `@Module` classes with `createCruzApp({ modules: [...] })` instead. If you are migrating from an older version, extract your module class from the provider and add it directly to the `modules` array in `createCruzApp()`.
+The `ServiceProvider` pattern, `BaseServiceProvider`, `setUserProviders()`, and `setup.server.ts` registration have been removed. Use `@Module` classes registered via `registerModules([...])` in `src/app.server.ts` instead. If you are migrating from an older version, extract your module class from the provider and add it directly to the `registerModules([...])` array in `src/app.server.ts`.
 :::
 
 ### Migration Example
@@ -308,18 +302,16 @@ setUserProviders(() => [ProductProvider]);
 
 **After:**
 ```typescript
-// server.cloudflare.ts
-import { createCruzApp } from '@cruzjs/core';
-import { CloudflareAdapter } from '@cruzjs/adapter-cloudflare';
+// src/app.server.ts
+import 'reflect-metadata';
+import { DrizzleService } from '@cruzjs/core/shared/database/drizzle.service';
+import { registerModules } from '@cruzjs/core/framework/module-registry';
+import { StartModule } from '@cruzjs/start/start.module';
 import * as schema from './database/schema';
 import { ProductModule } from './features/product/product.module';
 
-export default createCruzApp({
-  schema,
-  modules: [ProductModule],
-  adapter: new CloudflareAdapter(),
-  pages: () => import('virtual:react-router/server-build'),
-});
+DrizzleService.setSchema(schema);
+registerModules([StartModule, ProductModule]);
 ```
 
 No separate `.provider.ts` file is needed. The `@Module` class is the only file required.

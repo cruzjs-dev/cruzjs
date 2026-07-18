@@ -73,7 +73,7 @@ Once your project is scaffolded, open it with Claude Code and start asking for c
 Create a new feature called "projects" with full CRUD, org-scoped.
 ```
 
-Claude will generate the complete feature module: schema with org scoping, service with filtered queries, tRPC router with `orgProcedure`, and `@Module` registration in `createCruzApp()`.
+Claude will generate the complete feature module: schema with org scoping, service with filtered queries, tRPC router with `orgProcedure`, and `@Module` registration via `registerModules()` in `app.server.ts`.
 
 ### Add background processing
 

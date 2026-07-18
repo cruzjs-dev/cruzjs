@@ -300,22 +300,19 @@ These are the tokens and services you will use most often:
 tRPC routers are plain functions, not classes, so they cannot use constructor injection. Instead, resolve services from the container inside each procedure:
 
 ```typescript
-import { getAppContainer } from '@cruzjs/core';
 import { router, orgProcedure } from '@cruzjs/core/trpc/context';
 import { ProductService } from './product.service';
 
 export const productRouter = router({
   list: orgProcedure.query(async ({ ctx }) => {
-    const container = await getAppContainer();
-    const service = container.resolve(ProductService);
+    const service = ctx.container.get(ProductService);
     return service.list(ctx.org.orgId);
   }),
 
   create: orgProcedure
     .input(createProductSchema)
     .mutation(async ({ ctx, input }) => {
-      const container = await getAppContainer();
-      const service = container.resolve(ProductService);
+      const service = ctx.container.get(ProductService);
       return service.create(ctx.org.orgId, ctx.org.userId, input);
     }),
 });
@@ -374,6 +371,6 @@ export class ProductService {
 2. **Always use `@Inject()`** on constructor parameters.
 3. **Never use `new`** to instantiate a service -- resolve it from the container.
 4. **Default to singleton scope** unless the service holds per-request state.
-5. **Use `@Module()` to register services** rather than manual container bindings. Use the `modules` array in `createCruzApp()` to register modules.
-6. **Use `getAppContainer()`** in functional routers to resolve services. Use `@Inject()` property injection in OOP routers.
+5. **Use `@Module()` to register services** rather than manual container bindings. Pass modules to `registerModules([...])` in `src/app.server.ts` to register them.
+6. **Use `ctx.container.get()`** inside functional router procedures to resolve services. Use `@Inject()` property injection in OOP routers.
 7. **Use symbol tokens** (like `DRIZZLE`) for infrastructure; use class tokens for application services.

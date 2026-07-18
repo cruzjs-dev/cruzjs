@@ -181,21 +181,16 @@ if (error) {
     case 'NOT_FOUND':
       return (
         <EmptyState
-          message="This project doesn't exist or has been deleted."
+          title="This project doesn't exist or has been deleted."
           icon={<SearchIcon className="w-8 h-8 text-slate-400" />}
-          action={
-            <Link to="/projects" className="text-[#003DCC] hover:underline">
-              Back to Projects
-            </Link>
-          }
+          action={{ label: 'Back to Projects', onClick: () => navigate('/projects') }}
         />
       );
     case 'FORBIDDEN':
       return (
         <PermissionDenied
           message="You don't have permission to view this project."
-          actionLabel="Go to Dashboard"
-          onAction={() => navigate('/dashboard')}
+          action={{ label: 'Go to Dashboard', onClick: () => navigate('/dashboard') }}
         />
       );
     case 'UNAUTHORIZED':
@@ -263,16 +258,9 @@ const { data } = trpc.project.list.useQuery();
 if (data?.length === 0) {
   return (
     <EmptyState
-      message="You haven't created any projects yet."
+      title="You haven't created any projects yet."
       icon={<FolderIcon className="w-8 h-8 text-slate-400" />}
-      action={
-        <button
-          onClick={onCreateProject}
-          className="px-4 py-2 bg-[#003DCC] text-white rounded-lg"
-        >
-          Create Your First Project
-        </button>
-      }
+      action={{ label: 'Create Your First Project', onClick: onCreateProject }}
     />
   );
 }
@@ -288,7 +276,7 @@ const { data } = trpc.project.list.useQuery({ status: filter });
 if (data?.length === 0) {
   return (
     <EmptyState
-      message={
+      title={
         filter === 'archived'
           ? 'No archived projects.'
           : 'No projects match your filter.'
@@ -339,7 +327,7 @@ if (error) {
 A complete page handles all three states in a consistent order:
 
 ```tsx
-import { trpc } from '~/trpc/client';
+import { trpc } from '@/trpc/client';
 import { PageHeader, SectionCard, LoadingState, EmptyState } from '@cruzjs/ui';
 
 export default function ProjectsPage() {
@@ -364,8 +352,8 @@ export default function ProjectsPage() {
   if (!data?.length) {
     return (
       <EmptyState
-        message="No projects yet."
-        action={<button onClick={onCreate}>Create Project</button>}
+        title="No projects yet."
+        action={{ label: 'Create Project', onClick: onCreate }}
       />
     );
   }

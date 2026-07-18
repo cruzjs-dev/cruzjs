@@ -135,13 +135,11 @@ The classic functional style still works and can be used alongside OOP routers:
 ```ts
 // features/project/project.trpc.ts
 import { router, orgProcedure } from '@cruzjs/core/trpc/context';
-import { getAppContainer } from '@cruzjs/core';
 import { ProjectService } from './project.service';
 
 export const projectTrpc = router({
   list: orgProcedure.query(async ({ ctx }) => {
-    const container = await getAppContainer();
-    const service = container.resolve(ProjectService);
+    const service = ctx.container.get(ProjectService);
     return service.list(ctx.org.orgId);
   }),
 });
@@ -249,7 +247,7 @@ throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Something went wr
 Call procedures from React components using the typed tRPC client:
 
 ```tsx
-import { trpc } from '~/trpc/client';
+import { trpc } from '@/trpc/client';
 
 function ProjectListPage() {
   // Query — runs automatically, refetches in background

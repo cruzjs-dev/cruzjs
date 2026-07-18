@@ -304,24 +304,24 @@ export { WelcomeModule } from './welcome.module';
 
 ## Step 5: Register the Module
 
-Open `src/server.cloudflare.ts` and add `WelcomeModule`:
+Open `src/app.server.ts` and add `WelcomeModule`:
 
 ```typescript
-import { createCruzApp } from '@cruzjs/core';
-import { StartModule } from '@cruzjs/start';
+import 'reflect-metadata';
+import { DrizzleService } from '@cruzjs/core/shared/database/drizzle.service';
+import { registerModules } from '@cruzjs/core/framework/module-registry';
+import { StartModule } from '@cruzjs/start/start.module';
 import { TodosModule } from './features/todos';
 import { WelcomeModule } from './features/welcome';  // add this
 import * as schema from './database/schema';
 
-export default createCruzApp({
-  schema,
-  modules: [
-    StartModule,
-    TodosModule,
-    WelcomeModule,  // add this
-  ],
-  pages: () => import('virtual:react-router/server-build'),
-});
+DrizzleService.setSchema(schema);
+
+registerModules([
+  StartModule,
+  TodosModule,
+  WelcomeModule,  // add this
+]);
 ```
 
 That is all the code you need. No queue configuration, no worker setup, no infrastructure changes for local development.
@@ -499,7 +499,7 @@ src/features/welcome/
   welcome-email.listener.ts     # event listener
 ```
 
-This is a clean, self-contained feature. The welcome module knows nothing about how registration works — it just listens for the event and enqueues a job. If you remove the module from `server.cloudflare.ts`, the registration flow continues to work without the welcome email.
+This is a clean, self-contained feature. The welcome module knows nothing about how registration works — it just listens for the event and enqueues a job. If you remove the module from `app.server.ts`, the registration flow continues to work without the welcome email.
 
 ---
 

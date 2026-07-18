@@ -118,21 +118,18 @@ describe('myFeatureTrpc', () => {
       create: vi.fn(),
     };
 
+    // Procedures resolve services via ctx.container.get(Service)
     mockContainer = {
       get: vi.fn().mockReturnValue(mockService),
     };
-
-    vi.mock('@cruzjs/core', () => ({
-      getAppContainer: vi.fn().mockResolvedValue(mockContainer),
-    }));
   });
 
   it('should have list procedure', () => {
-    expect(myFeatureRouter.list).toBeDefined();
+    expect(myFeatureTrpc.list).toBeDefined();
   });
 
   it('should have create procedure', () => {
-    expect(myFeatureRouter.create).toBeDefined();
+    expect(myFeatureTrpc.create).toBeDefined();
   });
 });
 ```
@@ -194,6 +191,8 @@ export const createMockContext = (overrides = {}) => ({
   session: {
     user: { id: 'user-123', email: 'test@example.com' },
   },
+  // Procedures resolve services via ctx.container.get(Service)
+  container: { get: () => undefined, resolve: () => undefined },
   ...overrides,
 });
 

@@ -10,11 +10,12 @@ CruzJS provides real-time communication between server and clients through Serve
 Register the `BroadcastModule` in your application:
 
 ```typescript
+// src/app.server.ts
+import { registerModules } from '@cruzjs/core/framework/module-registry';
+import { StartModule } from '@cruzjs/start/start.module';
 import { BroadcastModule } from '@cruzjs/core/broadcasting';
 
-export default createCruzApp({
-  modules: [BroadcastModule],
-});
+registerModules([StartModule, BroadcastModule]);
 ```
 
 ## BroadcastService
@@ -139,11 +140,16 @@ The default backend uses `KVSSEBackend`. Messages are published to KV with short
 For container-based deployments, the broadcast system uses Redis pub/sub for cross-instance message delivery. Configure via the `DockerAdapter`:
 
 ```typescript
+import { createCruzApp } from '@cruzjs/core';
 import { DockerAdapter } from '@cruzjs/adapter-docker';
+import * as schema from './database/schema';
+import { StartModule } from '@cruzjs/start/start.module';
+import { BroadcastModule } from '@cruzjs/core/broadcasting';
 
 export default createCruzApp({
+  schema,
   adapter: new DockerAdapter(),
-  modules: [BroadcastModule],
+  modules: [StartModule, BroadcastModule],
 });
 ```
 

@@ -10,11 +10,12 @@ CruzJS provides full-text search through a provider-agnostic adapter interface. 
 Register the `SearchModule` in your application:
 
 ```typescript
+// src/app.server.ts
+import { registerModules } from '@cruzjs/core/framework/module-registry';
+import { StartModule } from '@cruzjs/start/start.module';
 import { SearchModule } from '@cruzjs/core/search';
 
-export default createCruzApp({
-  modules: [SearchModule],
-});
+registerModules([StartModule, SearchModule]);
 ```
 
 ## SearchAdapter Interface

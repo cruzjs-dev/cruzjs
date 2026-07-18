@@ -52,16 +52,14 @@ export class UserPreferencesService {
 ```typescript
 export const userPreferencesTrpc = router({
   get: protectedProcedure.query(async ({ ctx }) => {
-    const container = await getAppContainer();
-    const service = container.get<UserPreferencesService>(UserPreferencesService);
+    const service = ctx.container.get(UserPreferencesService);
     return service.getByUserId(ctx.session.user.id);
   }),
 
   update: protectedProcedure
     .input(updatePreferencesSchema)
     .mutation(async ({ ctx, input }) => {
-      const container = await getAppContainer();
-      const service = container.get<UserPreferencesService>(UserPreferencesService);
+      const service = ctx.container.get(UserPreferencesService);
       return service.update(ctx.session.user.id, input);
     }),
 });
@@ -136,8 +134,7 @@ export class ProductService {
 export const productTrpc = router({
   list: orgProcedure.query(async ({ ctx }) => {
     await requirePermission(ctx.org, 'product:read');
-    const container = await getAppContainer();
-    const service = container.get<ProductService>(ProductService);
+    const service = ctx.container.get(ProductService);
     return service.list(ctx.org.orgId);
   }),
 
@@ -145,8 +142,7 @@ export const productTrpc = router({
     .input(createProductSchema)
     .mutation(async ({ ctx, input }) => {
       await requirePermission(ctx.org, 'product:write');
-      const container = await getAppContainer();
-      const service = container.get<ProductService>(ProductService);
+      const service = ctx.container.get(ProductService);
       return service.create(ctx.org.orgId, ctx.org.userId, input);
     }),
 
@@ -154,8 +150,7 @@ export const productTrpc = router({
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       await requirePermission(ctx.org, 'product:delete');
-      const container = await getAppContainer();
-      const service = container.get<ProductService>(ProductService);
+      const service = ctx.container.get(ProductService);
       await service.delete(input.id, ctx.org.orgId);
       return { success: true };
     }),

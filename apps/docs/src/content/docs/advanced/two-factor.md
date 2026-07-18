@@ -10,11 +10,12 @@ CruzJS supports two-factor authentication (2FA) via TOTP authenticator apps (Goo
 Register the `TwoFactorModule` in your application:
 
 ```typescript
+// src/app.server.ts
+import { registerModules } from '@cruzjs/core/framework/module-registry';
+import { StartModule } from '@cruzjs/start/start.module';
 import { TwoFactorModule } from '@cruzjs/core/two-factor';
 
-export default createCruzApp({
-  modules: [TwoFactorModule],
-});
+registerModules([StartModule, TwoFactorModule]);
 ```
 
 ## Methods

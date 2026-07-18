@@ -99,15 +99,13 @@ Use `requirePermission` inside tRPC procedures. It throws a `FORBIDDEN` error au
 ```typescript
 import { orgProcedure, router } from '@cruzjs/core/trpc/context';
 import { requirePermission } from '@cruzjs/core/shared/middleware/permission.middleware';
-import { getAppContainer } from '@cruzjs/core';
 import { BillingService } from './billing.service';
 
 export const billingRouter = router({
   getPlans: orgProcedure.query(async ({ ctx }) => {
     await requirePermission(ctx, 'billing:read');
 
-    const container = await getAppContainer();
-    const service = container.resolve(BillingService);
+    const service = ctx.container.get(BillingService);
     return service.getPlans();
   }),
 });

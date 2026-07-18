@@ -1,12 +1,12 @@
 ---
 title: "Recipe: Feature Module"
-description: Creating a feature module with DI bindings, tRPC routers, event listeners, and page routes using @Module and createCruzApp.
+description: Creating a feature module with DI bindings, tRPC routers, event listeners, and page routes using @Module and registerModules.
 ---
 
-Feature modules are the primary extension mechanism in CruzJS. They allow you to register DI bindings, tRPC routers, React Router routes, and event listeners using the `@Module` decorator and `createCruzApp()`.
+Feature modules are the primary extension mechanism in CruzJS. They allow you to register DI bindings, tRPC routers, React Router routes, and event listeners using the `@Module` decorator and `registerModules()`.
 
 :::caution[Removed APIs]
-The `ServiceProvider` interface, `BaseServiceProvider`, `setUserProviders()`, and `setup.server.ts` registration have been removed. Use `@Module` classes with `createCruzApp({ modules: [...] })` instead.
+The `ServiceProvider` interface, `BaseServiceProvider`, `setUserProviders()`, and `setup.server.ts` registration have been removed. Use `@Module` classes with `registerModules([...])` instead.
 :::
 
 ## Creating a Module
@@ -40,21 +40,19 @@ import { trackRegistration } from './listeners/track-registration.listener';
 export class AnalyticsModule {}
 ```
 
-Register it in `createCruzApp()`:
+Register it in `registerModules()`:
 
 ```typescript
-// server.cloudflare.ts
-import { createCruzApp } from '@cruzjs/core';
-import { CloudflareAdapter } from '@cruzjs/adapter-cloudflare';
+// src/app.server.ts
+import 'reflect-metadata';
+import { DrizzleService } from '@cruzjs/core/shared/database/drizzle.service';
+import { registerModules } from '@cruzjs/core/framework/module-registry';
+import { StartModule } from '@cruzjs/start/start.module';
 import * as schema from './database/schema';
 import { AnalyticsModule } from './features/analytics/analytics.module';
 
-export default createCruzApp({
-  schema,
-  modules: [AnalyticsModule],
-  adapter: new CloudflareAdapter(),
-  pages: () => import('virtual:react-router/server-build'),
-});
+DrizzleService.setSchema(schema);
+registerModules([StartModule, AnalyticsModule]);
 ```
 
 ### What @Module Does
@@ -71,7 +69,7 @@ The `@Module` decorator declares:
 The framework loads modules in a defined order:
 
 1. **Core modules** load first (Auth, Org, Billing, Email, Jobs, Admin, Upload, AI)
-2. **User modules** load next (your app's modules, in the order specified in `createCruzApp`)
+2. **User modules** load next (your app's modules, in the order specified in `registerModules`)
 
 Within each module, the lifecycle is:
 
@@ -128,24 +126,28 @@ export class NotificationModule {}
 
 ## Multiple Feature Modules
 
-For larger applications, organize features into separate modules and pass them all to `createCruzApp()`:
+For larger applications, organize features into separate modules and pass them all to `registerModules()`:
 
 ```typescript
-// server.cloudflare.ts
-import { createCruzApp } from '@cruzjs/core';
-import { CloudflareAdapter } from '@cruzjs/adapter-cloudflare';
+// src/app.server.ts
+import 'reflect-metadata';
+import { DrizzleService } from '@cruzjs/core/shared/database/drizzle.service';
+import { registerModules } from '@cruzjs/core/framework/module-registry';
+import { StartModule } from '@cruzjs/start/start.module';
 import * as schema from './database/schema';
 import { ProjectModule } from './features/projects/project.module';
 import { ReportModule } from './features/reports/report.module';
 import { NotificationModule } from './features/notifications/notification.module';
 import { IntegrationModule } from './features/integrations/integration.module';
 
-export default createCruzApp({
-  schema,
-  modules: [ProjectModule, ReportModule, NotificationModule, IntegrationModule],
-  adapter: new CloudflareAdapter(),
-  pages: () => import('virtual:react-router/server-build'),
-});
+DrizzleService.setSchema(schema);
+registerModules([
+  StartModule,
+  ProjectModule,
+  ReportModule,
+  NotificationModule,
+  IntegrationModule,
+]);
 ```
 
 ## Extending Core Behavior

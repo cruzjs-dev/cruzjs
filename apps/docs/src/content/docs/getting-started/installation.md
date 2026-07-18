@@ -109,19 +109,21 @@ npm install -D @cruzjs/cli drizzle-kit @cloudflare/workers-types typescript wran
 
 ### 2. Create the Server Entry
 
-Create `server.cloudflare.ts` to bootstrap your application with `createCruzApp()`:
+Create `src/app.server.ts` to register your database schema and application modules:
 
 ```typescript
-import { createCruzApp } from '@cruzjs/core';
-import { CloudflareAdapter } from '@cruzjs/adapter-cloudflare';
+import 'reflect-metadata';
+import { DrizzleService } from '@cruzjs/core/shared/database/drizzle.service';
+import { registerModules } from '@cruzjs/core/framework/module-registry';
+import { StartModule } from '@cruzjs/start/start.module';
 import * as schema from './database/schema';
 
-export default createCruzApp({
-  schema,
-  modules: [],  // Add your feature modules here
-  adapter: new CloudflareAdapter(),
-  pages: () => import('virtual:react-router/server-build'),
-});
+DrizzleService.setSchema(schema);
+
+registerModules([
+  StartModule,
+  // Add your feature modules here
+]);
 ```
 
 ### 3. Create the Schema File
@@ -148,34 +150,12 @@ export * from '@cruzjs/core/database/schema';
 
 ### 4. Update Entry Server
 
-Your `entry.server.tsx` handles SSR rendering. The `createCruzApp()` call in `server.cloudflare.ts` handles all bootstrap logic -- no separate setup import is needed:
+`src/entry.server.tsx` is the actual entry point. It imports `./app.server` (so your schema and modules register before any request is handled) and re-exports the framework request handler -- all the SSR and bootstrap logic lives inside `handleRequest`, so no boilerplate is needed:
 
 ```typescript
-import type { AppLoadContext, EntryContext } from 'react-router';
-import { ServerRouter } from 'react-router';
-import { renderToReadableStream } from 'react-dom/server';
-import { CloudflareContext } from '@cruzjs/core/shared/cloudflare/context';
-
-export default async function handleRequest(
-  request: Request,
-  responseStatusCode: number,
-  responseHeaders: Headers,
-  entryContext: EntryContext,
-  loadContext: AppLoadContext
-) {
-  // Initialize Cloudflare bindings and database from load context
-  await CloudflareContext.init(loadContext);
-
-  const stream = await renderToReadableStream(
-    <ServerRouter context={entryContext} url={request.url} />
-  );
-
-  responseHeaders.set('Content-Type', 'text/html');
-  return new Response(stream, {
-    headers: responseHeaders,
-    status: responseStatusCode,
-  });
-}
+import './app.server';
+import { handleRequest } from '@cruzjs/core/framework/entry-handler.server';
+export default handleRequest;
 ```
 
 ## Environment Setup

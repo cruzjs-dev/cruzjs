@@ -159,7 +159,6 @@ export class UploadCleanupHandler implements JobHandler {
 ```typescript
 import { router, protectedProcedure } from '@cruzjs/core';
 import { z } from 'zod';
-import { getAppContainer } from '@cruzjs/core';
 import { UploadService } from '@cruzjs/core/upload/upload.service';
 
 export const uploadRouter = router({
@@ -171,8 +170,7 @@ export const uploadRouter = router({
       uploadType: z.enum(['avatar', 'document', 'image', 'video', 'general']).default('general'),
     }))
     .mutation(async ({ ctx, input }) => {
-      const container = await getAppContainer();
-      const uploadService = container.resolve(UploadService);
+      const uploadService = ctx.container.get(UploadService);
 
       return uploadService.requestUpload(
         {
@@ -190,17 +188,15 @@ export const uploadRouter = router({
       uploadId: z.string(),
       key: z.string(),
     }))
-    .mutation(async ({ input }) => {
-      const container = await getAppContainer();
-      const uploadService = container.resolve(UploadService);
+    .mutation(async ({ ctx, input }) => {
+      const uploadService = ctx.container.get(UploadService);
       return uploadService.confirmUpload(input);
     }),
 
   deleteUpload: protectedProcedure
     .input(z.object({ uploadId: z.string() }))
-    .mutation(async ({ input }) => {
-      const container = await getAppContainer();
-      const uploadService = container.resolve(UploadService);
+    .mutation(async ({ ctx, input }) => {
+      const uploadService = ctx.container.get(UploadService);
       await uploadService.deleteUpload(input.uploadId);
       return { success: true };
     }),

@@ -51,7 +51,7 @@ These headers are read by server middleware to authenticate and scope every requ
 Use `trpc.<router>.<procedure>.useQuery()` to fetch data. The return value includes everything from React Query: `data`, `isLoading`, `error`, `refetch`, and more.
 
 ```tsx
-import { trpc } from '~/trpc/client';
+import { trpc } from '@/trpc/client';
 import { LoadingState, EmptyState } from '@cruzjs/ui';
 
 export default function MembersPage() {
@@ -64,7 +64,7 @@ export default function MembersPage() {
   }
 
   if (!data?.members.length) {
-    return <EmptyState message="No members found." />;
+    return <EmptyState title="No members found." />;
   }
 
   return (
@@ -117,7 +117,7 @@ const { data } = trpc.dashboard.stats.useQuery(undefined, {
 Use `trpc.<router>.<procedure>.useMutation()` for create, update, and delete operations. Mutations return `mutate` (fire-and-forget) and `mutateAsync` (returns a Promise).
 
 ```tsx
-import { trpc } from '~/trpc/client';
+import { trpc } from '@/trpc/client';
 import { useState } from 'react';
 
 function InviteMemberForm() {
@@ -164,7 +164,7 @@ function InviteMemberForm() {
 After a mutation succeeds, you typically want to refetch related queries so the UI stays in sync. Use `useUtils()` to access the query invalidation API:
 
 ```tsx
-import { trpc } from '~/trpc/client';
+import { trpc } from '@/trpc/client';
 
 function CreateProjectButton() {
   const utils = trpc.useUtils();
@@ -244,7 +244,7 @@ const { data, error } = trpc.project.getById.useQuery({ id: projectId });
 if (error) {
   switch (error.data?.code) {
     case 'NOT_FOUND':
-      return <EmptyState message="Project not found." />;
+      return <EmptyState title="Project not found." />;
     case 'FORBIDDEN':
       return <PermissionDenied message="You don't have access to this project." />;
     case 'UNAUTHORIZED':
